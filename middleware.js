@@ -10,19 +10,22 @@ export function middleware(req) {
 
   if (authorizationHeader) {
     try {
-      // Decode the standard browser Basic Auth header
+      // 1. Get the encoded Base64 credentials string
       const basicAuth = authorizationHeader.split(' ')[1];
-      const credentials = atob(basicAuth).split(':');
-      const username = credentials[0];
-      const password = credentials[1];
+      
+      // 2. Decode the Base64 string correctly using standard Web APIs
+      const decoded = atob(basicAuth);
+      
+      // 3. Separate the username and password by splitting at the colon ':'
+      const [username, password] = decoded.split(':');
 
-      // Check if the credentials match our allowed list
+      // 4. Validate against our authorized list
       if (AUTHORIZED_USERS[username] && AUTHORIZED_USERS[username] === password) {
-        // Access granted: Continue to the requested static file
+        // Access granted: Continue to the dashboard page safely
         return; 
       }
     } catch (error) {
-      // Fall through to request authentication if decoding fails
+      // If decoding fails, fall through to trigger the login prompt
     }
   }
 
