@@ -30,7 +30,7 @@
     }
 
     .container {
-      max-width: 800px;
+      max-width: 1200px; /* Widened to fit the comprehensive table layout */
       margin: 0 auto;
     }
 
@@ -98,10 +98,10 @@
     }
 
     input, select, textarea {
-      padding: 0.75rem;
+      padding: 0.6rem;
       border: 1px solid var(--border);
       border-radius: 6px;
-      font-size: 1rem;
+      font-size: 0.95rem;
       color: var(--text-main);
       outline: none;
       transition: border-color 0.2s;
@@ -109,6 +109,14 @@
 
     input:focus, select:focus, textarea:focus {
       border-color: var(--accent);
+    }
+
+    /* Fixed styling for read-only dynamic values */
+    input[readonly] {
+      background-color: #f1f5f9;
+      color: #334155;
+      font-weight: 600;
+      cursor: not-allowed;
     }
 
     /* Items Table Styling */
@@ -127,19 +135,27 @@
       width: 100%;
       border-collapse: collapse;
       text-align: left;
+      font-size: 0.9rem;
     }
 
     th {
-      padding: 0.75rem;
+      padding: 0.75rem 0.5rem;
       border-bottom: 2px solid var(--border);
       color: var(--text-muted);
-      font-size: 0.85rem;
+      font-weight: 600;
+      white-space: nowrap;
     }
 
     td {
-      padding: 0.75rem;
+      padding: 0.5rem;
       border-bottom: 1px solid var(--border);
       vertical-align: middle;
+    }
+
+    .sno-cell {
+      text-align: center;
+      font-weight: 600;
+      color: var(--text-muted);
     }
 
     .btn-add {
@@ -164,6 +180,8 @@
       color: var(--danger);
       cursor: pointer;
       font-size: 1.25rem;
+      display: flex;
+      margin: 0 auto;
     }
 
     /* Summary Bar */
@@ -231,10 +249,10 @@
           <label for="department">Department</label>
           <select id="department" required>
             <option value="">Select Department</option>
+            <option value="inventory">Inventory & Logistics</option>
             <option value="it">Information Technology</option>
-            <option value="hr">Human Resources</option>
             <option value="ops">Operations</option>
-            <option value="marketing">Marketing</option>
+            <option value="procurement">Procurement</option>
           </select>
         </div>
 
@@ -249,41 +267,54 @@
         </div>
 
         <div class="form-group full-width">
-          <label for="purpose">Business Justification / Purpose</label>
-          <textarea id="purpose" rows="3" placeholder="Describe why these items are required..." required></textarea>
+          <label for="purpose">Business Justification / Remarks</label>
+          <textarea id="purpose" rows="2" placeholder="Provide extra order details or stock justifications..." required></textarea>
         </div>
       </div>
 
       <!-- Itemized Request Table -->
       <div class="items-section">
-        <label>Requested Items</label>
+        <label>Inventory Order Items</label>
         <div class="table-container">
           <table>
             <thead>
               <tr>
-                <th style="width: 50%;">Item Description</th>
-                <th style="width: 15%;">Qty</th>
-                <th style="width: 25%;">Est. Unit Price ($)</th>
-                <th style="width: 10%;"></th>
+                <th style="width: 4%; text-align: center;">S.No</th>
+                <th style="width: 16%;">Vendor Name</th>
+                <th style="width: 18%;">Product Name</th>
+                <th style="width: 12%;">Packing Details</th>
+                <th style="width: 11%;">Unit Cost ($)</th>
+                <th style="width: 10%;">Par Stock Level</th>
+                <th style="width: 10%;">Stock In Hand</th>
+                <th style="width: 9%;">Order Qty</th>
+                <th style="width: 11%;">Net Amt ($)</th>
+                <th style="width: 4%;"></th>
               </tr>
             </thead>
             <tbody id="itemTableBody">
+              <!-- Initial Row 1 -->
               <tr>
-                <td><input type="text" placeholder="e.g., Dell 27 Hint Monitor" style="width:100%;" required></td>
-                <td><input type="number" value="1" min="1" class="qty-input" style="width:100%;" oninput="calculateTotal()" required></td>
-                <td><input type="number" placeholder="0.00" step="0.01" min="0" class="price-input" style="width:100%;" oninput="calculateTotal()" required></td>
-                <td style="text-align: center;"><button type="button" class="btn-remove" onclick="removeItem(this)">×</button></td>
+                <td class="sno-cell">1</td>
+                <td><input type="text" placeholder="Vendor Co." style="width:100%;" required></td>
+                <td><input type="text" placeholder="Product details" style="width:100%;" required></td>
+                <td><input type="text" placeholder="e.g., Box of 10" style="width:100%;" required></td>
+                <td><input type="number" placeholder="0.00" step="0.01" min="0" class="unit-cost-input" style="width:100%;" oninput="calculateRowAndTotal()" required></td>
+                <td><input type="number" placeholder="0" min="0" class="par-stock-input" style="width:100%;" required></td>
+                <td><input type="number" placeholder="0" min="0" class="stock-hand-input" style="width:100%;" required></td>
+                <td><input type="number" placeholder="0" min="1" class="order-qty-input" style="width:100%;" oninput="calculateRowAndTotal()" required></td>
+                <td><input type="number" placeholder="0.00" class="net-amt-input" style="width:100%;" readonly></td>
+                <td><button type="button" class="btn-remove" onclick="removeItem(this)">×</button></td>
               </tr>
             </tbody>
           </table>
         </div>
         
-        <button type="button" class="btn-add" onclick="addItem()">+ Add Another Item</button>
+        <button type="button" class="btn-add" onclick="addItem()">+ Add Row</button>
       </div>
 
       <!-- Total Calculator Banner -->
       <div class="summary-bar">
-        <span>Estimated Total:</span>
+        <span>Estimated Grand Total:</span>
         <span id="grandTotal">$0.00</span>
       </div>
 
@@ -297,52 +328,109 @@
 </div>
 
 <script>
-  // Dynamically inject a new blank row into the items table
+  // Dynamically inject a new row with proper Serial Number sequencing
   function addItem() {
     const tbody = document.getElementById('itemTableBody');
+    const nextSNo = tbody.rows.length + 1;
     const row = document.createElement('tr');
-    row.innerHTML = `
-      <td><input type="text" placeholder="Item description" style="width:100%;" required></td>
-      <td><input type="number" value="1" min="1" class="qty-input" style="width:100%;" oninput="calculateTotal()" required></td>
-      <td><input type="number" placeholder="0.00" step="0.01" min="0" class="price-input" style="width:100%;" oninput="calculateTotal()" required></td>
-      <td style="text-align: center;"><button type="button" class="btn-remove" onclick="removeItem(this)">×</button></td>
+    
+        row.innerHTML = `
+      <td class="sno-cell">${nextSNo}</td>
+      <td><input type="text" placeholder="Vendor Co." style="width:100%;" required></td>
+      <td><input type="text" placeholder="Product details" style="width:100%;" required></td>
+      <td><input type="text" placeholder="e.g., Box of 10" style="width:100%;" required></td>
+      <td><input type="number" placeholder="0.00" step="0.01" min="0" class="unit-cost-input" style="width:100%;" oninput="calculateRowAndTotal()" required></td>
+      <td><input type="number" placeholder="0" min="0" class="par-stock-input" style="width:100%;" required></td>
+      <td><input type="number" placeholder="0" min="0" class="stock-hand-input" style="width:100%;" required></td>
+      <td><input type="number" placeholder="0" min="1" class="order-qty-input" style="width:100%;" oninput="calculateRowAndTotal()" required></td>
+      <td><input type="number" placeholder="0.00" class="net-amt-input" style="width:100%;" readonly></td>
+      <td><button type="button" class="btn-remove" onclick="removeItem(this)">×</button></td>
     `;
     tbody.appendChild(row);
-    calculateTotal();
+    calculateRowAndTotal();
   }
-
-  // Remove targeted row and re-evaluate total math
+  // Remove targeted row and re-sequence table elements
   function removeItem(button) {
-    const row = button.closest('tr');
     const tbody = document.getElementById('itemTableBody');
     if (tbody.rows.length > 1) {
-      row.remove();
-      calculateTotal();
+      button.closest('tr').remove();
+      updateSerialNumbers();
+      calculateRowAndTotal();
     } else {
-      alert("Your request must contain at least one item.");
+      alert("Your order request must contain at least one item row.");
     }
   }
 
-  // Live total sum tally
-  function calculateTotal() {
+  // Refreshes the display order of S.No column elements 
+  function updateSerialNumbers() {
+    const rows = document.querySelectorAll('#itemTableBody tr');
+    rows.forEach((row, index) => {
+      row.querySelector('.sno-cell').innerText = index + 1;
+    });
+  }
+
+  // Processes math operations: row-specific calculations and final form total sum updates
+  function calculateRowAndTotal() {
     let grandTotal = 0;
     const rows = document.querySelectorAll('#itemTableBody tr');
     
     rows.forEach(row => {
-      const qty = parseFloat(row.querySelector('.qty-input').value) || 0;
-      const price = parseFloat(row.querySelector('.price-input').value) || 0;
-      grandTotal += qty * price;
+      const unitCost = parseFloat(row.querySelector('.unit-cost-input').value) || 0;
+      const orderQty = parseFloat(row.querySelector('.order-qty-input').value) || 0;
+      
+      // Compute Net Amount per row
+      const netAmt = unitCost * orderQty;
+      row.querySelector('.net-amt-input').value = netAmt ? netAmt.toFixed(2) : "";
+      
+      grandTotal += netAmt;
     });
 
     document.getElementById('grandTotal').innerText = `$${grandTotal.toFixed(2)}`;
   }
-
-  // Form Submission Logic
+  // Form Submission Configuration Hook
   function handleSubmit(event) {
     event.preventDefault();
-    alert('Purchase request successfully captured! Ready to link to your backend API.');
+    
+    // 1. Gather global form metadata
+    const requestData = {
+      department: document.getElementById('department').value,
+      priority: document.getElementById('priority').value,
+      purpose: document.getElementById('purpose').value,
+      requestedAt: new Date().toISOString(),
+      items: []
+    };
+
+    // 2. Loop through table rows to harvest structured items
+    const rows = document.querySelectorAll('#itemTableBody tr');
+    rows.forEach(row => {
+      requestData.items.push({
+        vendorName: row.cells[1].querySelector('input').value,
+        productName: row.cells[2].querySelector('input').value,
+        packingDetails: row.cells[3].querySelector('input').value,
+        unitCost: parseFloat(row.querySelector('.unit-cost-input').value) || 0,
+        parStockLevel: parseInt(row.querySelector('.par-stock-input').value, 10) || 0,
+        stockInHand: parseInt(row.querySelector('.stock-hand-input').value, 10) || 0,
+        orderQty: parseInt(row.querySelector('.order-qty-input').value, 10) || 0,
+        netAmt: parseFloat(row.querySelector('.net-amt-input').value) || 0
+      });
+    });
+
+    // 3. Log the clean JSON payload (View in browser inspect -> Console)
+    console.log("Submitting Purchase Request Payload:", requestData);
+
+    // 4. Temporary success alert (Replace this block with your fetch API call)
+    alert(`Success! Captured ${requestData.items.length} items for submission. Check your browser console to see the formatted data structure.`);
+    
+    /* 
+    // FUTURE BACKEND INTEGRATION TEMPLATE:
+    fetch('/api/purchase-requests', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(requestData)
+    })
+    .then(res => res.json())
+    .then(data => { window.location.href = '/dashboard'; })
+    .catch(err => alert('Submission failed: ' + err));
+    */
   }
 </script>
-
-</body>
-</html>
