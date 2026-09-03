@@ -1,6 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <!-- 🛡️ PLACE THE ROUTE GUARD SCRIPT IMMEDIATELY AT THE TOP -->
+  <script>
+    (function () {
+      // 1. Read the login session tracking markers from local storage variables
+      const sessionActive = localStorage.getItem("session_active");
+      const sessionUser = localStorage.getItem("session_user");
+
+      // 2. Reject access immediately if variables are missing or unconfirmed
+      if (sessionActive !== "true" || !sessionUser) {
+        alert("🔒 Unauthorized access. Please log in first.");
+        
+        // 3. Clear any corrupted partial storage flags and kick them back to login page
+        localStorage.removeItem("session_active");
+        localStorage.removeItem("session_user");
+        
+        window.location.replace("/"); // .replace removes the dashboard from their browser back-button history
+      }
+    })();
+  </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>User Dashboard</title>
