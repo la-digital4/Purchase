@@ -1,5 +1,3 @@
-import { NextResponse } from 'next/server';
-
 // Define your authorized users here (Username : Password)
 const AUTHORIZED_USERS = {
   "admin": "SuperSecretPassword2026",
@@ -20,7 +18,8 @@ export function middleware(req) {
 
       // Check if the credentials match our allowed list
       if (AUTHORIZED_USERS[username] && AUTHORIZED_USERS[username] === password) {
-        return NextResponse.next(); // Access granted
+        // Access granted: Continue to the requested static file
+        return; 
       }
     } catch (error) {
       // Fall through to request authentication if decoding fails
@@ -28,7 +27,7 @@ export function middleware(req) {
   }
 
   // Trigger the browser's native login popup if wrong or missing credentials
-  return new NextResponse('Authentication Required', {
+  return new Response('Authentication Required', {
     status: 401,
     headers: {
       'WWW-Authenticate': 'Basic realm="Secure Portal Area"',
@@ -36,7 +35,7 @@ export function middleware(req) {
   });
 }
 
-// Configure middleware to protect all paths except internal static assets
+// Configure middleware to protect the entry paths
 export const config = {
   matcher: ['/', '/index.html'],
 };
