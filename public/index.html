@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secure User Dashboard</title>
+    <style>
+        :root {
+            --bg-color: #0a0a0a;
+            --card-bg: #141414;
+            --border-color: #262626;
+            --text-main: #ffffff;
+            --text-muted: #a3a3a3;
+            --accent: #0070f3;
+            --accent-glow: rgba(0, 112, 243, 0.15);
+            --danger: #ff0000;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Navigation Bar */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.25rem 2rem;
+            border-bottom: 1px solid var(--border-color);
+            background-color: rgba(10, 10, 10, 0.8);
+            backdrop-filter: blur(8px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            font-weight: 700;
+            font-size: 1.25rem;
+            letter-spacing: -0.5px;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logo::before {
+            content: '';
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            background-color: #00df89;
+            border-radius: 50%;
+            box-shadow: 0 0 8px #00df89;
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .user-badge {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            background: var(--card-bg);
+            padding: 0.4rem 0.8rem;
+            border-radius: 20px;
+            border: 1px solid var(--border-color);
+        }
+
+        .logout-btn {
+            background: transparent;
+            color: var(--text-muted);
+            border: 1px solid var(--border-color);
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .logout-btn:hover {
+            color: var(--danger);
+            border-color: var(--danger);
+            background: rgba(255, 0, 0, 0.05);
+        }
+
+        /* Main Content Container */
+        main {
+            flex: 1;
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+
+        .welcome-section {
+            margin-bottom: 3rem;
+        }
+
+        .welcome-section h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            letter-spacing: -1px;
+            margin-bottom: 0.5rem;
+        }
+
+        .welcome-section p {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+        }
+
+        /* Dashboard Grid Layout */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.75rem;
+            transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            border-color: var(--accent);
+            box-shadow: 0 8px 30px var(--accent-glow);
+        }
+
+        .card-icon {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .card h3 {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .card p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 2rem;
+            border-top: 1px solid var(--border-color);
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        /* Responsive UI Adjustments */
+        @media (max-width: 600px) {
+            nav { padding: 1rem; }
+            main { padding: 2rem 1rem; }
+            .welcome-section h1 { font-size: 2rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="logo">SecurePortal</div>
+        <div class="nav-actions">
+            <span class="user-badge" id="userBadge">Session Active</span>
+            <button class="logout-btn" onclick="logout()">Log Out</button>
+        </div>
+    </nav>
+
+    <main>
+        <section class="welcome-section">
+            <h1>Welcome Back</h1>
+            <p>Access granted. You are viewing encrypted internal resources.</p>
+        </section>
+
+        <div class="grid">
+            <!-- Card 1 -->
+            <div class="card">
+                <div class="card-icon">🔒</div>
+                <h3>Protected Assets</h3>
+                <p>View confidential databases, project architectures, and shared encryption nodes safely mapped right here.</p>
+            </div>
+
+            <!-- Card 2 -->
+            <div class="card">
+                <div class="card-icon">⚡</div>
+                <h3>Edge Analytics</h3>
+                <p>Real-time stream configurations powered directly via low-latency Vercel global distribution layers.</p>
+            </div>
+
+            <!-- Card 3 -->
+            <div class="card">
+                <div class="card-icon">⚙️</div>
+                <h3>Profile Management</h3>
+                <p>Review active key authentications, modify user clearance metadata settings, and track token history.</p>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        &copy; 2026 SecurePortal. All rights reserved. Encrypted Connection.
+    </footer>
+
+    <script>
+        // Log out logic specifically tailored for HTTP Basic Auth
+        function logout() {
+            // Trick the browser into overriding credentials by sending fake bad ones
+            const redirectUrl = window.location.protocol + '//logout:logout@' + window.location.host + window.location.pathname;
+            
+            // Short delay to allow browser caching to clear
+            setTimeout(() => {
+                window.location.href = '/';
+            }, 50);
+            
+            window.location.href = redirectUrl;
+        }
+    </script>
+</body>
+</html>
