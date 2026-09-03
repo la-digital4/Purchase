@@ -1,341 +1,347 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LA CINEMA (LA Maris) PURCHASE REQUEST</title>
-    <style>
-        :root {
-            --primary-bg: #ffffff;
-            --text-color: #000000;
-            --border-color: #000000;
-            --header-bg: #e0e0e0;
-            --accent-green: #00ff00;
-            --accent-red: #ff0000;
-            --input-bg: #f9f9f9;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>New Purchase Request</title>
+  <style>
+    :root {
+      --bg-primary: #f8fafc;
+      --panel-bg: #ffffff;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --accent: #2563eb;
+      --accent-hover: #1d4ed8;
+      --border: #e2e8f0;
+      --danger: #ef4444;
+    }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: Arial, sans-serif;
-        }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
 
-        body {
-            background-color: #f4f4f4;
-            padding: 20px;
-            color: var(--text-color);
-        }
+    body {
+      background-color: var(--bg-primary);
+      color: var(--text-main);
+      padding: 2rem 1rem;
+    }
 
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            background-color: var(--primary-bg);
-            border: 2px solid var(--border-color);
-            padding: 10px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-        }
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+    }
 
-        /* Top Header Grid Structure */
-        .meta-header-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 15px;
-            font-size: 12px;
-            font-weight: bold;
-        }
+    .header-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+    }
 
-        .meta-header-table td {
-            border: 1px solid var(--border-color);
-            padding: 6px;
-            vertical-align: middle;
-        }
+    .back-btn {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
 
-        .logo-cell {
-            width: 15%;
-            text-align: center;
-            background-color: #ffffff;
-        }
+    .back-btn:hover {
+      color: var(--accent);
+    }
 
-        .logo-placeholder {
-            display: inline-flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            font-weight: 900;
-            font-size: 16px;
-            line-height: 1.1;
-        }
-        
-        .logo-top { color: #d62427; font-size: 22px; letter-spacing: 2px; }
-        .logo-bottom { color: #1e3a8a; font-size: 9px; letter-spacing: 4px; border-top: 1px solid #000; width: 100%; text-align: center; }
+    .card {
+      background: var(--panel-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 2rem;
+      box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05);
+    }
 
-        .title-cell {
-            width: 35%;
-            text-align: center;
-            font-size: 14px;
-            font-weight: bold;
-        }
+    h1 {
+      font-size: 1.5rem;
+      margin-bottom: 1.5rem;
+      font-weight: 700;
+    }
 
-        .label-cell {
-            background-color: var(--header-bg);
-            text-align: center;
-            width: 8%;
-        }
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.25rem;
+      margin-bottom: 2rem;
+    }
 
-        .value-cell {
-            text-align: center;
-            width: 12%;
-        }
+    @media (max-width: 600px) {
+      .form-grid { grid-template-columns: 1fr; }
+    }
 
-        .status-badge-container {
-            display: flex;
-            flex-direction: column;
-            gap: 2px;
-            align-items: center;
-            justify-content: center;
-        }
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
 
-        .badge-on-time {
-            background-color: var(--accent-green);
-            color: #000;
-            padding: 2px 8px;
-            border-radius: 3px;
-            font-size: 10px;
-            width: 70px;
-            text-align: center;
-        }
+    .form-group.full-width {
+      grid-column: 1 / -1;
+    }
 
-        .badge-late {
-            background-color: var(--accent-red);
-            color: #fff;
-            padding: 2px 8px;
-            border-radius: 3px;
-            font-size: 10px;
-            width: 70px;
-            text-align: center;
-        }
+    label {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
 
-        .total-val-cell {
-            color: var(--accent-red);
-            font-size: 16px;
-            font-weight: bold;
-        }
+    input, select, textarea {
+      padding: 0.75rem;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-size: 1rem;
+      color: var(--text-main);
+      outline: none;
+      transition: border-color 0.2s;
+    }
 
-        /* Secondary Tracking Header Row */
-        .status-row-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 10px;
-            font-size: 12px;
-            font-weight: bold;
-        }
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--accent);
+    }
 
-        .status-row-table td {
-            border: 1px solid var(--border-color);
-            padding: 6px;
-            text-align: center;
-        }
+    /* Items Table Styling */
+    .items-section {
+      margin-top: 2rem;
+      border-top: 1px solid var(--border);
+      padding-top: 2rem;
+    }
 
-        /* Main Itemized Form Grid */
-        .items-table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 11px;
-        }
+    .table-container {
+      overflow-x: auto;
+      margin-top: 1rem;
+    }
 
-        .items-table th {
-            background-color: var(--header-bg);
-            border: 1px solid var(--border-color);
-            padding: 6px 4px;
-            font-weight: bold;
-            text-align: center;
-            white-space: nowrap;
-        }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+    }
 
-        .items-table td {
-            border: 1px solid var(--border-color);
-            padding: 4px;
-            height: 28px;
-        }
+    th {
+      padding: 0.75rem;
+      border-bottom: 2px solid var(--border);
+      color: var(--text-muted);
+      font-size: 0.85rem;
+    }
 
-        .items-table input, .items-table select {
-            width: 100%;
-            height: 100%;
-            border: none;
-            background: transparent;
-            font-size: 11px;
-            padding: 2px;
-        }
+    td {
+      padding: 0.75rem;
+      border-bottom: 1px solid var(--border);
+      vertical-align: middle;
+    }
 
-        .items-table input:focus {
-            outline: 1px solid #0070f3;
-            background-color: #fff;
-        }
+    .btn-add {
+      background: none;
+      border: 1px dashed var(--accent);
+      color: var(--accent);
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 500;
+      margin-top: 1rem;
+      transition: all 0.2s;
+    }
 
-        .text-center { text-align: center; }
-        .text-right { text-align: right; }
+    .btn-add:hover {
+      background: #eff6ff;
+    }
 
-        /* Save Button Context Menu */
-        .action-bar {
-            margin-top: 15px;
-            display: flex;
-            justify-content: flex-end;
-            gap: 10px;
-        }
+    .btn-remove {
+      background: none;
+      border: none;
+      color: var(--danger);
+      cursor: pointer;
+      font-size: 1.25rem;
+    }
 
-        .btn {
-            padding: 8px 16px;
-            font-size: 13px;
-            font-weight: bold;
-            cursor: pointer;
-            border-radius: 4px;
-            border: 1px solid #000;
-        }
+    /* Summary Bar */
+    .summary-bar {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 1rem;
+      margin-top: 1.5rem;
+      font-size: 1.2rem;
+      font-weight: 700;
+    }
 
-        .btn-primary {
-            background-color: #238636;
-            color: white;
-            border: none;
-        }
+    /* Action Buttons */
+    .actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 1rem;
+      margin-top: 2rem;
+    }
 
-        .btn-secondary {
-            background-color: #f0f0f0;
-        }
-    </style>
+    .btn {
+      padding: 0.75rem 1.5rem;
+      border-radius: 6px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+    }
+
+    .btn-submit {
+      background-color: var(--accent);
+      color: white;
+    }
+
+    .btn-submit:hover {
+      background-color: var(--accent-hover);
+    }
+
+    .btn-cancel {
+      background-color: transparent;
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+    }
+
+    .btn-cancel:hover {
+      background-color: #f1f5f9;
+    }
+  </style>
 </head>
 <body>
 
 <div class="container">
-    <!-- Top Metadata Configuration Grid -->
-    <table class="meta-header-table">
-        <tr>
-            <td rowspan="2" class="logo-cell">
-                <div class="logo-placeholder">
-                    <span class="logo-top">LA</span>
-                    <span class="logo-bottom">CINEMA</span>
-                </div>
-            </td>
-            <td rowspan="2" class="title-cell">
-                LA CINEMA (LA Maris) PURCHASE REQUEST - August 26
-            </td>
-            <td class="label-cell">2nd</td>
-            <td class="label-cell">PO of Month</td>
-            <td class="label-cell">Date</td>
-            <td class="value-cell" style="background-color: #e0f2fe;">
-                <div class="status-badge-container">
-                    <span class="badge-on-time">ON TIME</span>
-                    <span class="badge-late" style="opacity: 0.3;">LATE</span>
-                </div>
-            </td>
-            <td class="value-cell" style="background-color: #ccfbf1; font-weight: normal;">
-                8/23/2026 13:05:08
-            </td>
-        </tr>
-        <tr>
-            <td class="label-cell">Month</td>
-            <td class="value-cell">August</td>
-            <td colspan="2" class="label-cell" style="text-align: right; padding-right: 15px;">Total Purchase Value</td>
-            <td class="value-cell total-val-cell">₹ <span id="total-purchase-value">0.00</span></td>
-        </tr>
-    </table>
+  <div class="header-nav">
+    <a href="/dashboard" class="back-btn">← Back to Dashboard</a>
+  </div>
 
-    <!-- Secondary Tracking Headers Grid -->
-    <table class="status-row-table">
-        <tr>
-            <td style="width: 50%; background-color: var(--header-bg);">Stock Order Status</td>
-            <td style="width: 50%; background-color: var(--header-bg);">Stock receiving Status</td>
-        </tr>
-        <tr>
-            <td><input type="text" style="width:100%; border:none; text-align:center; font-size:12px;" placeholder="Enter system or workflow order status..."></td>
-            <td><input type="text" style="width:100%; border:none; text-align:center; font-size:12px;" placeholder="Enter item intake delivery remarks..."></td>
-        </tr>
-    </table>
+  <div class="card">
+    <h1>Create Purchase Request</h1>
+    
+    <form id="purchaseForm" onsubmit="handleSubmit(event)">
+      <!-- Request Meta Details -->
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="department">Department</label>
+          <select id="department" required>
+            <option value="">Select Department</option>
+            <option value="it">Information Technology</option>
+            <option value="hr">Human Resources</option>
+            <option value="ops">Operations</option>
+            <option value="marketing">Marketing</option>
+          </select>
+        </div>
 
-    <!-- Main Dynamic Computational Entry Grid -->
-    <table class="items-table" id="entry-grid">
-        <thead>
-            <tr>
-                <th style="width: 3%;">S.No</th>
-                <th style="width: 10%;">Vendor Name</th>
-                <th style="width: 12%;">Product Name</th>
-                <th style="width: 10%;">Packing Details</th>
-                <th style="width: 6%;">Unit Cost</th>
-                <th style="width: 6%;">Par Stock Level</th>
-                <th style="width: 6%;">Stock In Hand</th>
-                <th style="width: 6%;">Order Qty</th>
-                <th style="width: 8%;">Net Amt</th>
-                <th style="width: 3%; text-align: center;">⚙️</th>
-                <th style="width: 15%;">PO Manager Remarks</th>
-                <th style="width: 15%;">Site Manager Remarks</th>
-            </tr>
-        </thead>
-        <tbody>
-            <!-- Rows are generated via JavaScript to maintain pure, accurate grid matrix structural scaling -->
-        </tbody>
-    </table>
+        <div class="form-group">
+          <label for="priority">Priority Level</label>
+          <select id="priority" required>
+            <option value="low">Low</option>
+            <option value="medium" selected>Medium</option>
+            <option value="high">High</option>
+            <option value="urgent">Urgent</option>
+          </select>
+        </div>
 
-    <div class="action-bar">
-        <button class="btn btn-secondary" onclick="addNewRow()">➕ Add Row Item</button>
-        <button class="btn btn-primary" onclick="submitForm()">💾 Save Purchase Request</button>
-    </div>
+        <div class="form-group full-width">
+          <label for="purpose">Business Justification / Purpose</label>
+          <textarea id="purpose" rows="3" placeholder="Describe why these items are required..." required></textarea>
+        </div>
+      </div>
+
+      <!-- Itemized Request Table -->
+      <div class="items-section">
+        <label>Requested Items</label>
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th style="width: 50%;">Item Description</th>
+                <th style="width: 15%;">Qty</th>
+                <th style="width: 25%;">Est. Unit Price ($)</th>
+                <th style="width: 10%;"></th>
+              </tr>
+            </thead>
+            <tbody id="itemTableBody">
+              <tr>
+                <td><input type="text" placeholder="e.g., Dell 27 Hint Monitor" style="width:100%;" required></td>
+                <td><input type="number" value="1" min="1" class="qty-input" style="width:100%;" oninput="calculateTotal()" required></td>
+                <td><input type="number" placeholder="0.00" step="0.01" min="0" class="price-input" style="width:100%;" oninput="calculateTotal()" required></td>
+                <td style="text-align: center;"><button type="button" class="btn-remove" onclick="removeItem(this)">×</button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        
+        <button type="button" class="btn-add" onclick="addItem()">+ Add Another Item</button>
+      </div>
+
+      <!-- Total Calculator Banner -->
+      <div class="summary-bar">
+        <span>Estimated Total:</span>
+        <span id="grandTotal">$0.00</span>
+      </div>
+
+      <!-- Submit Elements -->
+      <div class="actions">
+        <button type="button" class="btn btn-cancel" onclick="window.location.href='/dashboard'">Cancel</button>
+        <button type="submit" class="btn btn-submit">Submit Request</button>
+      </div>
+    </form>
+  </div>
 </div>
 
 <script>
-    let rowCount = 0;
+  // Dynamically inject a new blank row into the items table
+  function addItem() {
+    const tbody = document.getElementById('itemTableBody');
+    const row = document.createElement('tr');
+    row.innerHTML = `
+      <td><input type="text" placeholder="Item description" style="width:100%;" required></td>
+      <td><input type="number" value="1" min="1" class="qty-input" style="width:100%;" oninput="calculateTotal()" required></td>
+      <td><input type="number" placeholder="0.00" step="0.01" min="0" class="price-input" style="width:100%;" oninput="calculateTotal()" required></td>
+      <td style="text-align: center;"><button type="button" class="btn-remove" onclick="removeItem(this)">×</button></td>
+    `;
+    tbody.appendChild(row);
+    calculateTotal();
+  }
 
-    // Initialize layout grid matrix with 25 starting structural entry units matching reference document
-    window.onload = function() {
-        for (let i = 0; i < 25; i++) {
-            addNewRow();
-        }
+  // Remove targeted row and re-evaluate total math
+  function removeItem(button) {
+    const row = button.closest('tr');
+    const tbody = document.getElementById('itemTableBody');
+    if (tbody.rows.length > 1) {
+      row.remove();
+      calculateTotal();
+    } else {
+      alert("Your request must contain at least one item.");
     }
+  }
 
-    function addNewRow() {
-        rowCount++;
-        const tbody = document.querySelector("#entry-grid tbody");
-        const tr = document.createElement("tr");
-        
-        tr.innerHTML = `
-            <td class="text-center font-weight: bold;">${rowCount}</td>
-            <td><input type="text" placeholder="Vendor"></td>
-            <td><input type="text" placeholder="Product"></td>
-            <td><input type="text" placeholder="e.g. 24x500ml Can"></td>
-            <td><input type="number" step="0.01" class="unit-cost text-right" placeholder="0.00" oninput="calculateRowNet(this)"></td>
-            <td><input type="number" class="text-center" placeholder="0"></td>
-            <td><input type="number" class="text-center" placeholder="0"></td>
-            <td><input type="number" class="order-qty text-center" placeholder="0" oninput="calculateRowNet(this)"></td>
-            <td class="text-right font-weight: bold; padding-right: 8px;" style="background-color: #fafafa;">₹ <span class="row-net-amt">0.00</span></td>
-            <td class="text-center"><span style="color: #999; cursor: not-allowed;" title="Row structural baseline lock">🔒</span></td>
-            <td><input type="text" placeholder="PO Remarks"></td>
-            <td><input type="text" placeholder="Site Remarks"></td>
-        `;
-        tbody.appendChild(tr);
-    }
+  // Live total sum tally
+  function calculateTotal() {
+    let grandTotal = 0;
+    const rows = document.querySelectorAll('#itemTableBody tr');
+    
+    rows.forEach(row => {
+      const qty = parseFloat(row.querySelector('.qty-input').value) || 0;
+      const price = parseFloat(row.querySelector('.price-input').value) || 0;
+      grandTotal += qty * price;
+    });
 
-    function calculateRowNet(element) {
-        const tr = element.closest("tr");
-        const unitCost = parseFloat(tr.querySelector(".unit-cost").value) || 0;
-        const orderQty = parseFloat(tr.querySelector(".order-qty").value) || 0;
-        
-        const netAmt = unitCost * orderQty;
-        tr.querySelector(".row-net-amt").innerText = netAmt.toFixed(2);
-        
-        calculateTotalPurchaseValue();
-    }
+    document.getElementById('grandTotal').innerText = `$${grandTotal.toFixed(2)}`;
+  }
 
-    function calculateTotalPurchaseValue() {
-        let total = 0;
-        document.querySelectorAll(".row-net-amt").forEach(span => {
-            total += parseFloat(span.innerText) || 0;
-        });
-        document.getElementById("total-purchase-value").innerText = total.toFixed(2);
-    }
-
-    function submitForm() {
-        alert("Purchase Request Layout metrics compiled and prepared successfully! Total Order Value: ₹" + document.getElementById("total-purchase-value").innerText);
-    }
+  // Form Submission Logic
+  function handleSubmit(event) {
+    event.preventDefault();
+    alert('Purchase request successfully captured! Ready to link to your backend API.');
+  }
 </script>
 
 </body>
