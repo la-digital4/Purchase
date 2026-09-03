@@ -117,6 +117,7 @@
     </div>
 
     <!-- 2. Protected Dashboard UI -->
+        <!-- 2. Protected Dashboard UI -->
     <div id="dashboard-content">
         <nav>
             <div class="logo">SecurePortal</div>
@@ -124,32 +125,79 @@
         </nav>
 
         <main>
+            <!-- Header Section -->
             <section class="welcome-section">
-                <h1>Welcome Back</h1>
-                <p>Access granted. You are viewing encrypted internal resources.</p>
+                <h1>Internal Operations Control</h1>
+                <p>Authorized personnel view only. Active session monitored.</p>
             </section>
 
-            <div class="grid">
-                <div class="card">
-                    <div class="card-icon">🔒</div>
-                    <h3>Protected Assets</h3>
-                    <p>View confidential databases, project architectures, and shared encryption nodes safely mapped right here.</p>
+            <!-- Metrics Highlight Row -->
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 2rem;">
+                <div style="background: var(--card-bg); border: 1px solid var(--border-color); padding: 1.5rem; border-radius: 8px;">
+                    <span style="color: var(--text-muted); font-size: 0.85rem;">System Status</span>
+                    <h2 style="color: #00df89; margin-top: 0.25rem;">Operational</h2>
                 </div>
-                <div class="card">
-                    <div class="card-icon">⚡</div>
-                    <h3>Edge Analytics</h3>
-                    <p>Real-time stream configurations powered directly via low-latency Vercel global distribution layers.</p>
+                <div style="background: var(--card-bg); border: 1px solid var(--border-color); padding: 1.5rem; border-radius: 8px;">
+                    <span style="color: var(--text-muted); font-size: 0.85rem;">Encryption Level</span>
+                    <h2 style="color: var(--accent); margin-top: 0.25rem;">AES-256</h2>
                 </div>
-                <div class="card">
-                    <div class="card-icon">⚙️</div>
-                    <h3>Profile Management</h3>
-                    <p>Review active key authentications, modify user clearance metadata settings, and track token history.</p>
+                <div style="background: var(--card-bg); border: 1px solid var(--border-color); padding: 1.5rem; border-radius: 8px;">
+                    <span style="color: var(--text-muted); font-size: 0.85rem;">Connected Users</span>
+                    <h2 style="margin-top: 0.25rem;">3 Active</h2>
                 </div>
+            </div>
+
+            <!-- Main Dashboard Area (Split Layout) -->
+            <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 1.5rem; align-items: start;">
+                
+                <!-- Left Side: Data Table / Main Resource -->
+                <div style="background: var(--card-bg); border: 1px solid var(--border-color); padding: 1.5rem; border-radius: 12px;">
+                    <h3 style="margin-bottom: 1rem;">Recent Project Updates</h3>
+                    
+                    <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.95rem;">
+                        <thead>
+                            <tr style="border-bottom: 1px solid var(--border-color); color: var(--text-muted);">
+                                <th style="padding: 0.75rem 0;">Project Name</th>
+                                <th style="padding: 0.75rem 0;">Owner</th>
+                                <th style="padding: 0.75rem 0;">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr style="border-bottom: 1px solid #1f1f1f;">
+                                <td style="padding: 0.75rem 0; font-weight: 500;">Vercel Deployment</td>
+                                <td style="padding: 0.75rem 0; color: var(--text-muted);">Venkatesh</td>
+                                <td style="padding: 0.75rem 0; color: #00df89;">🟢 Live</td>
+                            </tr>
+                            <tr style="border-bottom: 1px solid #1f1f1f;">
+                                <td style="padding: 0.75rem 0; font-weight: 500;">Auth Gateway</td>
+                                <td style="padding: 0.75rem 0; color: var(--text-muted);">System</td>
+                                <td style="padding: 0.75rem 0; color: #00df89;">🟢 Active</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 0.75rem 0; font-weight: 500;">Database Sync</td>
+                                <td style="padding: 0.75rem 0; color: var(--text-muted);">Admin</td>
+                                <td style="padding: 0.75rem 0; color: var(--text-muted);">⚪ Pending</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Right Side: Security Announcements -->
+                <div style="background: var(--card-bg); border: 1px solid var(--border-color); padding: 1.5rem; border-radius: 12px;">
+                    <h3 style="margin-bottom: 0.75rem;">Security Bulletins</h3>
+                    <p style="color: var(--text-muted); font-size: 0.9rem; line-height: 1.4; margin-bottom: 1rem;">
+                        <strong>Notice:</strong> Session authentication tokens are saved locally for this browser instance. Logging out clears active cookies.
+                    </p>
+                    <div style="background: rgba(0, 112, 243, 0.1); border-left: 3px solid var(--accent); padding: 0.75rem; border-radius: 4px; font-size: 0.85rem;">
+                        🔒 All database API string mappings have successfully migrated to the Vercel edge runtime network.
+                    </div>
+                </div>
+
             </div>
         </main>
 
         <footer>
-            &copy; 2026 SecurePortal. All rights reserved.
+            &copy; 2026 SecurePortal. Built securely on Vercel.
         </footer>
     </div>
 
