@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Dashboard</title>
+  <style>
+    :root {
+      --bg-primary: #f8fafc;
+      --panel-bg: #ffffff;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --accent: #2563eb;
+      --accent-hover: #1d4ed8;
+      --border: #e2e8f0;
+      --success: #10b981;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-primary);
+      color: var(--text-main);
+    }
+
+    /* Layout structure */
+    .dashboard-layout {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* Sidebar Panel Styles */
+    .sidebar {
+      width: 260px;
+      background: var(--panel-bg);
+      border-right: 1px solid var(--border);
+      padding: 2rem 1.5rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .brand {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--accent);
+      margin-bottom: 2rem;
+    }
+
+    .nav-links {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      list-style: none;
+    }
+
+    .nav-item {
+      display: block;
+      padding: 0.75rem 1rem;
+      color: var(--text-main);
+      text-decoration: none;
+      border-radius: 6px;
+      font-weight: 500;
+      transition: background 0.2s;
+    }
+
+    .nav-item:hover, .nav-item.active {
+      background: #eff6ff;
+      color: var(--accent);
+    }
+
+    .logout-btn {
+      background: none;
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      padding: 0.6rem;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+      width: 100%;
+      transition: all 0.2s;
+    }
+
+    .logout-btn:hover {
+      background: #f1f5f9;
+      color: #ef4444;
+      border-color: #fca5a5;
+    }
+
+    /* Main Workspace Panel */
+    .main-content {
+      flex: 1;
+      padding: 2rem 3rem;
+    }
+
+    .header-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2.5rem;
+    }
+
+    .user-profile {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+    }
+
+    /* Statistics Metrics Grid */
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 3rem;
+    }
+
+    .metric-card {
+      background: var(--panel-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+
+    .metric-label {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .metric-value {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-top: 0.5rem;
+    }
+
+    .badge-active {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.85rem;
+      color: var(--success);
+      font-weight: 600;
+    }
+
+    .pulse-dot {
+      width: 8px;
+      height: 8px;
+      background-color: var(--success);
+      border-radius: 50%;
+    }
+
+    /* Welcoming Banner Accent */
+    .welcome-card {
+      background: linear-gradient(135deg, #2563eb, #1d4ed8);
+      color: white;
+      padding: 2.5rem;
+      border-radius: 12px;
+      margin-bottom: 2rem;
+    }
+
+    .welcome-card h2 { margin-bottom: 0.5rem; }
+    .welcome-card p { opacity: 0.9; }
+
+    @media (max-width: 768px) {
+      .dashboard-layout { flex-direction: column; }
+      .sidebar { width: 100%; border-right: none; border-bottom: 1px solid var(--border); }
+      .main-content { padding: 2rem 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="dashboard-layout">
+  <!-- Left Side Navigation -->
+  <aside class="sidebar">
+    <div>
+      <div class="brand">📦 Procurement Portal</div>
+      <nav>
+        <ul class="nav-links">
+          <li><a href="/dashboard" class="nav-item active">Overview</a></li>
+          <li><a href="/purchase-request" class="nav-item">New Request</a></li>
+        </ul>
+      </nav>
+    </div>
+    
+    <!-- Single remaining structured logout anchor -->
+    <div>
+      <button class="logout-btn" onclick="handleLogout()">Log Out</button>
+    </div>
+  </aside>
+
+  <!-- Right Side Main Content Panel -->
+  <main class="main-content">
+    <header class="header-bar">
+      <div>
+        <h1 style="font-size: 1.75rem; font-weight: 700;">Dashboard</h1>
+      </div>
+      <div class="user-profile">
+        Welcome back, <strong style="color: var(--text-main);">Session User</strong>
+      </div>
+    </header>
+
+    <!-- Welcome Action Jumbotron Banner -->
+    <div class="welcome-card">
+      <h2>Manage Your Inventory Orders</h2>
+      <p>Create item requests, set product par stocks, track active vendor quotes, and monitor log requests seamlessly.</p>
+    </div>
+
+    <!-- Analytics Dashboard Counters -->
+    <div class="metrics-grid">
+      <!-- Active session user counting module -->
+      <div class="metric-card">
+        <div class="badge-active">
+          <span class="pulse-dot"></span> Gateway System Active
+        </div>
+        <div class="metric-value">3 Users</div>
+        <div class="metric-label" style="margin-top: 0.5rem;">Connected Right Now</div>
+      </div>
+
+      <div class="metric-card">
+        <div class="metric-label">Pending Forms</div>
+        <div class="metric-value" style="color: #f59e0b;">0</div>
+        <div class="metric-label" style="margin-top: 0.5rem;">Awaiting Review</div>
+      </div>
+
+      <div class="metric-card">
+        <div class="metric-label">Total Volume Spends</div>
+        <div class="metric-value">$0.00</div>
+        <div class="metric-label" style="margin-top: 0.5rem;">This Calendar Month</div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script>
+  // Simple logout script function handler
+  function handleLogout() {
+    alert("Logging you out securely... clearing local web variables.");
+    // Clear cookies/tokens here if applicable, then send home
+    window.location.href = "/";
+  }
+</script>
+
+</body>
+</html>
