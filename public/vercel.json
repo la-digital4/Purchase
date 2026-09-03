@@ -1,9 +1,0 @@
-{
-  "cleanUrls": true,
-  "rewrites": [
-    {
-      "source": "/purchase-request",
-      "destination": "/purchase-request.html"
-    }
-  ]
-}
