@@ -222,7 +222,7 @@
         <h1 style="font-size: 1.75rem; font-weight: 700;">Dashboard</h1>
       </div>
       <div class="user-profile">
-        Welcome back, <strong style="color: var(--text-main);">Session User</strong>
+  Welcome back, <strong id="displayName" style="color: var(--text-main);">Session User</strong>
       </div>
     </header>
 
@@ -267,5 +267,27 @@
   }
 </script>
 
+  <script>
+  // Runs automatically when the dashboard finishes loading
+  document.addEventListener("DOMContentLoaded", () => {
+    const activeUser = localStorage.getItem("session_user");
+    if (activeUser) {
+      document.getElementById("displayName").innerText = activeUser;
+    }
+  });
+
+  // Your existing logout script function handler
+  function handleLogout() {
+    alert("Logging you out securely... clearing local web variables.");
+    
+    // Wipe all session markers cleanly
+    localStorage.removeItem("session_active");
+    localStorage.removeItem("session_user");
+    
+    window.location.replace("/");
+  }
+</script>
+
+  
 </body>
 </html>
