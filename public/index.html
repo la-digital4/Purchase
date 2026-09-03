@@ -158,27 +158,42 @@
 
 <script>
   function handleLogin(event) {
-    event.preventDefault(); // Intercept page reload mechanics
+  event.preventDefault();
 
-    const usernameInput = document.getElementById('username').value.trim();
-    const passwordInput = document.getElementById('password').value;
-    const errorBox = document.getElementById('errorBox');
+  const usernameInput = document.getElementById('username').value.trim();
+  const passwordInput = document.getElementById('password').value;
+  const errorBox = document.getElementById('errorBox');
 
-    // Hardcoded example credentials check (Replace with your database API calls later)
-    if (usernameInput === "Venkat" && passwordInput === "123") {
+  // Submit credentials to your Vercel serverless gateway endpoint
+  fetch('/api/auth/login', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ username: usernameInput, password: passwordInput })
+  })
+  .then(res => res.json())
+  .then(data => {
+    if (data.success) {
       errorBox.style.display = "none";
       
-      // Store dynamic session flags locally to confirm standard portal practices
+      // Save data values to your browser storage framework scope
       localStorage.setItem("session_active", "true");
-      localStorage.setItem("session_user", usernameInput);
+      localStorage.setItem("session_user", data.user.username);
 
-      // Route cleanly onto extensionless Vercel edge paths
+      // Route cleanly onto extensionless dashboard page file
       window.location.href = '/dashboard';
     } else {
-      // Unhide client-facing error alert card elements
+      // Unhide client-facing error alert card elements with custom API error messages
+      errorBox.innerText = data.message || "Invalid credentials.";
       errorBox.style.display = "block";
     }
-  }
+  })
+  .catch(err => {
+    console.error("Authentication Error:", err);
+    errorBox.innerText = "Network error. Please try again later.";
+    errorBox.style.display = "block";
+  });
+}
+
 </script>
 
 </body>
