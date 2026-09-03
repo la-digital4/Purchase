@@ -1,1 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LA CINEMA (LA Maris) PURCHASE REQUEST</title>
+    <style>
+        :root {
+            --primary-bg: #ffffff;
+            --text-color: #000000;
+            --border-color: #000000;
+            --header-bg: #e0e0e0;
+            --accent-green: #00ff00;
+            --accent-red: #ff0000;
+            --input-bg: #f9f9f9;
+        }
 
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background-color: #f4f4f4;
+            padding: 20px;
+            color: var(--text-color);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: var(--primary-bg);
+            border: 2px solid var(--border-color);
+            padding: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        /* Top Header Grid Structure */
+        .meta-header-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 15px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .meta-header-table td {
+            border: 1px solid var(--border-color);
+            padding: 6px;
+            vertical-align: middle;
+        }
+
+        .logo-cell {
+            width: 15%;
+            text-align: center;
+            background-color: #ffffff;
+        }
+
+        .logo-placeholder {
+            display: inline-flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            font-size: 16px;
+            line-height: 1.1;
+        }
+        
+        .logo-top { color: #d62427; font-size: 22px; letter-spacing: 2px; }
+        .logo-bottom { color: #1e3a8a; font-size: 9px; letter-spacing: 4px; border-top: 1px solid #000; width: 100%; text-align: center; }
+
+        .title-cell {
+            width: 35%;
+            text-align: center;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .label-cell {
+            background-color: var(--header-bg);
+            text-align: center;
+            width: 8%;
+        }
+
+        .value-cell {
+            text-align: center;
+            width: 12%;
+        }
+
+        .status-badge-container {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .badge-on-time {
+            background-color: var(--accent-green);
+            color: #000;
+            padding: 2px 8px;
+            border-radius: 3px;
+            font-size: 10px;
+            width: 70px;
+            text-align: center;
+        }
+
+        .badge-late {
+            background-color: var(--accent-red);
+            color: #fff;
+            padding: 2px 8px;
+            border-radius: 3px;
+            font-size: 10px;
+            width: 70px;
+            text-align: center;
+        }
+
+        .total-val-cell {
+            color: var(--accent-red);
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        /* Secondary Tracking Header Row */
+        .status-row-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 10px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .status-row-table td {
+            border: 1px solid var(--border-color);
+            padding: 6px;
+            text-align: center;
+        }
+
+        /* Main Itemized Form Grid */
+        .items-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 11px;
+        }
+
+        .items-table th {
+            background-color: var(--header-bg);
+            border: 1px solid var(--border-color);
+            padding: 6px 4px;
+            font-weight: bold;
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        .items-table td {
+            border: 1px solid var(--border-color);
+            padding: 4px;
+            height: 28px;
+        }
+
+        .items-table input, .items-table select {
+            width: 100%;
+            height: 100%;
+            border: none;
+            background: transparent;
+            font-size: 11px;
+            padding: 2px;
+        }
+
+        .items-table input:focus {
+            outline: 1px solid #0070f3;
+            background-color: #fff;
+        }
+
+        .text-center { text-align: center; }
+        .text-right { text-align: right; }
+
+        /* Save Button Context Menu */
+        .action-bar {
+            margin-top: 15px;
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            font-size: 13px;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 4px;
+            border: 1px solid #000;
+        }
+
+        .btn-primary {
+            background-color: #238636;
+            color: white;
+            border: none;
+        }
+
+        .btn-secondary {
+            background-color: #f0f0f0;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- Top Metadata Configuration Grid -->
+    <table class="meta-header-table">
+        <tr>
+            <td rowspan="2" class="logo-cell">
+                <div class="logo-placeholder">
+                    <span class="logo-top">LA</span>
+                    <span class="logo-bottom">CINEMA</span>
+                </div>
+            </td>
+            <td rowspan="2" class="title-cell">
+                LA CINEMA (LA Maris) PURCHASE REQUEST - August 26
+            </td>
+            <td class="label-cell">2nd</td>
+            <td class="label-cell">PO of Month</td>
+            <td class="label-cell">Date</td>
+            <td class="value-cell" style="background-color: #e0f2fe;">
+                <div class="status-badge-container">
+                    <span class="badge-on-time">ON TIME</span>
+                    <span class="badge-late" style="opacity: 0.3;">LATE</span>
+                </div>
+            </td>
+            <td class="value-cell" style="background-color: #ccfbf1; font-weight: normal;">
+                8/23/2026 13:05:08
+            </td>
+        </tr>
+        <tr>
+            <td class="label-cell">Month</td>
+            <td class="value-cell">August</td>
+            <td colspan="2" class="label-cell" style="text-align: right; padding-right: 15px;">Total Purchase Value</td>
+            <td class="value-cell total-val-cell">₹ <span id="total-purchase-value">0.00</span></td>
+        </tr>
+    </table>
+
+    <!-- Secondary Tracking Headers Grid -->
+    <table class="status-row-table">
+        <tr>
+            <td style="width: 50%; background-color: var(--header-bg);">Stock Order Status</td>
+            <td style="width: 50%; background-color: var(--header-bg);">Stock receiving Status</td>
+        </tr>
+        <tr>
+            <td><input type="text" style="width:100%; border:none; text-align:center; font-size:12px;" placeholder="Enter system or workflow order status..."></td>
+            <td><input type="text" style="width:100%; border:none; text-align:center; font-size:12px;" placeholder="Enter item intake delivery remarks..."></td>
+        </tr>
+    </table>
+
+    <!-- Main Dynamic Computational Entry Grid -->
+    <table class="items-table" id="entry-grid">
+        <thead>
+            <tr>
+                <th style="width: 3%;">S.No</th>
+                <th style="width: 10%;">Vendor Name</th>
+                <th style="width: 12%;">Product Name</th>
+                <th style="width: 10%;">Packing Details</th>
+                <th style="width: 6%;">Unit Cost</th>
+                <th style="width: 6%;">Par Stock Level</th>
+                <th style="width: 6%;">Stock In Hand</th>
+                <th style="width: 6%;">Order Qty</th>
+                <th style="width: 8%;">Net Amt</th>
+                <th style="width: 3%; text-align: center;">⚙️</th>
+                <th style="width: 15%;">PO Manager Remarks</th>
+                <th style="width: 15%;">Site Manager Remarks</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Rows are generated via JavaScript to maintain pure, accurate grid matrix structural scaling -->
+        </tbody>
+    </table>
+
+    <div class="action-bar">
+        <button class="btn btn-secondary" onclick="addNewRow()">➕ Add Row Item</button>
+        <button class="btn btn-primary" onclick="submitForm()">💾 Save Purchase Request</button>
+    </div>
+</div>
+
+<script>
+    let rowCount = 0;
+
+    // Initialize layout grid matrix with 25 starting structural entry units matching reference document
+    window.onload = function() {
+        for (let i = 0; i < 25; i++) {
+            addNewRow();
+        }
+    }
+
+    function addNewRow() {
+        rowCount++;
+        const tbody = document.querySelector("#entry-grid tbody");
+        const tr = document.createElement("tr");
+        
+        tr.innerHTML = `
+            <td class="text-center font-weight: bold;">${rowCount}</td>
+            <td><input type="text" placeholder="Vendor"></td>
+            <td><input type="text" placeholder="Product"></td>
+            <td><input type="text" placeholder="e.g. 24x500ml Can"></td>
+            <td><input type="number" step="0.01" class="unit-cost text-right" placeholder="0.00" oninput="calculateRowNet(this)"></td>
+            <td><input type="number" class="text-center" placeholder="0"></td>
+            <td><input type="number" class="text-center" placeholder="0"></td>
+            <td><input type="number" class="order-qty text-center" placeholder="0" oninput="calculateRowNet(this)"></td>
+            <td class="text-right font-weight: bold; padding-right: 8px;" style="background-color: #fafafa;">₹ <span class="row-net-amt">0.00</span></td>
+            <td class="text-center"><span style="color: #999; cursor: not-allowed;" title="Row structural baseline lock">🔒</span></td>
+            <td><input type="text" placeholder="PO Remarks"></td>
+            <td><input type="text" placeholder="Site Remarks"></td>
+        `;
+        tbody.appendChild(tr);
+    }
+
+    function calculateRowNet(element) {
+        const tr = element.closest("tr");
+        const unitCost = parseFloat(tr.querySelector(".unit-cost").value) || 0;
+        const orderQty = parseFloat(tr.querySelector(".order-qty").value) || 0;
+        
+        const netAmt = unitCost * orderQty;
+        tr.querySelector(".row-net-amt").innerText = netAmt.toFixed(2);
+        
+        calculateTotalPurchaseValue();
+    }
+
+    function calculateTotalPurchaseValue() {
+        let total = 0;
+        document.querySelectorAll(".row-net-amt").forEach(span => {
+            total += parseFloat(span.innerText) || 0;
+        });
+        document.getElementById("total-purchase-value").innerText = total.toFixed(2);
+    }
+
+    function submitForm() {
+        alert("Purchase Request Layout metrics compiled and prepared successfully! Total Order Value: ₹" + document.getElementById("total-purchase-value").innerText);
+    }
+</script>
+
+</body>
+</html>
