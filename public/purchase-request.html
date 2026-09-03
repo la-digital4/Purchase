@@ -1,6 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
+  <!-- 🛡️ ROUTE GUARD LOCK: Runs before anything else renders -->
+  <script>
+    (function () {
+      const sessionActive = localStorage.getItem("session_active");
+      const sessionUser = localStorage.getItem("session_user");
+
+      if (sessionActive !== "true" || !sessionUser) {
+        alert("🔒 Access Denied. Please authenticate to open the purchase portal.");
+        localStorage.removeItem("session_active");
+        localStorage.removeItem("session_user");
+        window.location.replace("/"); // Evict visitor directly back to landing login
+      }
+    })();
+  </script>
+  
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>New Purchase Request</title>
