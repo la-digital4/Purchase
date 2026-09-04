@@ -8,7 +8,7 @@
   ],
   "headers": [
     {
-      "source": "/dashboard.html",
+      "source": "/(dashboard.html|purchase-request.html)",
       "headers": [
         {
           "key": "Cache-Control",
@@ -22,5 +22,7 @@
           "key": "Expires",
           "value": "0"
         }
+      ]
+    }
   ]
 }
