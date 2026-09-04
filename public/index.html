@@ -2,17 +2,17 @@
 <html lang="en">
 <head>
 
-  <script>
-  function protectLoginPage() {
-    if (localStorage.getItem("session_active") === "true") {
-      window.location.replace('/dashboard');
-    }
-  }
-  protectLoginPage();
-  window.addEventListener('pageshow', function (event) {
-    if (event.persisted) protectLoginPage();
-  });
-</script>
+  //<script>
+  //function protectLoginPage() {
+    //if (localStorage.getItem("session_active") === "true") {
+      //window.location.replace('/dashboard');
+    //}
+  //}
+  //protectLoginPage();
+  //window.addEventListener('pageshow', function (event) {
+    //if (event.persisted) protectLoginPage();
+  //});
+//</script>
 
   
   <script>
@@ -27,11 +27,11 @@
   // Run on initial load
   checkSessionAndRedirect();
 
-  // Run if they hit 'Back' into this page from the bfcache
- // window.addEventListener('pageshow', function (event) {
-    //if (event.persisted) {
-      //checkSessionAndRedirect();
-    //}
+   Run if they hit 'Back' into this page from the bfcache
+   window.addEventListener('pageshow', function (event) {
+   if (event.persisted) {
+      checkSessionAndRedirect();
+    }
   });
 </script>
 
