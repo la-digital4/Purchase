@@ -214,19 +214,20 @@
   .then(res => res.json())
   .then(data => {
     if (data.success) {
-      errorBox.style.display = "none";
-      
-      // Save data values to your browser storage framework scope
-      localStorage.setItem("session_active", "true");
-      localStorage.setItem("session_user", data.user.username);
+  errorBox.style.display = "none";
+  
+  // Save data values to your browser storage framework scope
+  localStorage.setItem("session_active", "true");
+  localStorage.setItem("session_user", data.user.username);
 
-      // Route cleanly onto extensionless dashboard page file
-      window.location.href = '/dashboard';
-    } else {
-      // Unhide client-facing error alert card elements with custom API error messages
-      errorBox.innerText = data.message || "Invalid credentials.";
-      errorBox.style.display = "block";
-    }
+  // CORRECTED: Overwrites the browser history so the 'Back' button won't loop back here
+  window.location.replace('/dashboard');
+} else {
+  // Unhide client-facing error alert card elements with custom API error messages
+  errorBox.innerText = data.message || "Invalid credentials.";
+  errorBox.style.display = "block";
+}
+
   })
   .catch(err => {
     console.error("Authentication Error:", err);
