@@ -20,26 +20,26 @@
 </script>
 
   <script>
-    (function () {
-      const sessionActive = localStorage.getItem("session_active");
-      const sessionUser = localStorage.getItem("session_user");
+    //(function () {
+      //const sessionActive = localStorage.getItem("session_active");
+      //const sessionUser = localStorage.getItem("session_user");
 
-      if (sessionActive !== "true" || !sessionUser) {
-        alert("🔒 Access Denied. Please authenticate to open the purchase portal.");
-        localStorage.removeItem("session_active");
-        localStorage.removeItem("session_user");
-        window.location.replace("/"); // Evict visitor directly back to landing login
-      }
-    })();
+      //if (sessionActive !== "true" || !sessionUser) {
+        //alert("🔒 Access Denied. Please authenticate to open the purchase portal.");
+        //localStorage.removeItem("session_active");
+        //localStorage.removeItem("session_user");
+        //window.location.replace("/"); // Evict visitor directly back to landing login
+      //}
+    //})();
   </script>
   <script>
   // Detects if the page was loaded from the browser's Back/Forward cache
-  //window.addEventListener('pageshow', function (event) {
-    //if (event.persisted) {
-      // Force a hard reload from the server to re-trigger authentication checks
-      //window.location.reload();
-    //}
-  //});
+  window.addEventListener('pageshow', function (event) {
+    if (event.persisted) {
+       Force a hard reload from the server to re-trigger authentication checks
+      window.location.reload();
+    }
+  });
 </script>
 
   <meta charset="UTF-8">
