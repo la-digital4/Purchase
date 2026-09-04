@@ -1,72 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
-
-    <script>
-  //function protectLoginPage() {
-    //if (localStorage.getItem("session_active") === "true") {
-      //window.location.replace('/dashboard');
-    //}
-  //}
-  //protectLoginPage();
-  //window.addEventListener('pageshow', function (event) {
-    //if (event.persisted) protectLoginPage();
-  //});
-</script>
-
-  
-  <script>
-  // If a user clicks 'Back' and lands on the login page while STILL logged in,
-  // instantly bounce them back to the dashboard. This breaks the forward button.
-  function checkSessionAndRedirect() {
-    if (localStorage.getItem('userToken')) {
-      window.location.replace('/dashboard.html');
-    }
-  }
-
-  // Run on initial load
-  checkSessionAndRedirect();
-
-   Run if they hit 'Back' into this page from the bfcache
-   window.addEventListener('pageshow', function (event) {
-   if (event.persisted) {
-      checkSessionAndRedirect();
-    }
-  });
-</script>
-
-  <script>
-  // Detects if the page was loaded from the browser's Back/Forward cache
-  window.addEventListener('pageshow', function (event) {
-    if (event.persisted) {
-      // Force a hard reload from the server to re-trigger authentication checks
-      window.location.reload();
-    }
-  });
-</script>
-
-  
-    
-    
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Secure User Dashboard - Login</title>
     <style>
-
-:root {
-      --bg-primary: #f8fafc;
-      --panel-bg: #ffffff;
-      --text-main: #0f172a;
-      --text-muted: #64748b;
-      --accent: #2563eb;
-      --accent-hover: #1d4ed8;
-      --border: #e2e8f0;
-      --danger: #ef4444;
-    }
-
-        
-        
         * {
             box-sizing: border-box;
             margin: 0;
@@ -79,14 +17,14 @@
             overflow: hidden;
         }
 
-        /* Split-screen layout canvas */
+        /* Split-screen layout wrapper */
         .page-container {
             display: flex;
             min-height: 100vh;
             width: 100vw;
         }
 
-        /* Left Column: Fully Functional Portal Panel */
+        /* Left Side: Login Form Column */
         .login-column {
             flex: 1;
             display: flex;
@@ -97,7 +35,7 @@
             z-index: 2;
         }
 
-        /* Portal White Card Module */
+        /* Login Card Panel */
         .login-card {
             background: white;
             padding: 2.5rem;
@@ -107,202 +45,116 @@
             max-width: 420px;
         }
 
-        .login-container {
-      width: 100%;
-      max-width: 400px;
-      background: var(--panel-bg);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 2.5rem 2rem;
-      box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05);
-    }
+        .logo-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            width: 100%;
+        }
 
-    .brand-title {
-      font-size: 1.5rem;
-      font-weight: 700;
-      color: var(--text-main);
-      margin-bottom: 0.5rem;
-      text-align: center;
-    }
+        .logo-img {
+            height: 45px;
+            width: auto;
+            object-fit: contain;
+        }
 
-    .brand-subtitle {
-      font-size: 0.9rem;
-      color: var(--text-muted);
-      margin-bottom: 2rem;
-      text-align: center;
-    }
+        .portal-title {
+            text-align: center;
+            font-size: 1.5rem;
+            color: #0f172a;
+            margin-bottom: 0.5rem;
+        }
 
-    .form-group {
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-      margin-bottom: 1.25rem;
-    }
+        .portal-subtitle {
+            text-align: center;
+            font-size: 0.875rem;
+            color: #64748b;
+            margin-bottom: 1.5rem;
+        }
 
-    label {
-      font-size: 0.85rem;
-      font-weight: 600;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-    }
+        /* Error Message Alert Style */
+        .alert-error {
+            background-color: #fef2f2;
+            border: 1px solid #fee2e2;
+            color: #991b1b;
+            padding: 0.75rem 1rem;
+            border-radius: 6px;
+            font-size: 0.875rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
 
-    input {
-      padding: 0.75rem;
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      font-size: 1rem;
-      color: var(--text-main);
-      outline: none;
-      transition: border-color 0.2s;
-    }
+        /* Form Controls */
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
 
-    input:focus {
-      border-color: var(--accent);
-    }
+        .form-label {
+            display: block;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #475569;
+            margin-bottom: 0.5rem;
+        }
 
-    .btn-submit {
-      width: 100%;
-      padding: 0.75rem;
-      background-color: var(--accent);
-      color: white;
-      border: none;
-      border-radius: 6px;
-      font-size: 1rem;
-      font-weight: 600;
-      cursor: pointer;
-      margin-top: 0.5rem;
-      transition: background-color 0.2s;
-    }
+        .form-input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            font-size: 0.95rem;
+            color: #334155;
+            outline: none;
+            transition: border-color 0.2s;
+        }
 
-    .btn-submit:hover {
-      background-color: var(--accent-hover);
-    }
+        .form-input:focus {
+            border-color: #2563eb;
+        }
 
-    .error-msg {
-      background-color: #fef2f2;
-      color: var(--danger);
-      border: 1px solid #fee2e2;
-      padding: 0.75rem;
-      border-radius: 6px;
-      font-size: 0.9rem;
-      margin-bottom: 1.25rem;
-      display: none; /* Controlled via JavaScript hidden toggles */
-      text-align: center;
-      font-weight: 500;
-    }
+        .submit-btn {
+            width: 100%;
+            padding: 0.75rem;
+            background-color: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            margin-top: 0.5rem;
+        }
 
-    .footer-notice {
-      margin-top: 2rem;
-      font-size: 0.75rem;
-      color: var(--text-muted);
-      text-align: center;
-      line-height: 1.4;
-    }
+        .submit-btn:hover {
+            background-color: #1d4ed8;
+        }
 
-  
-<div class="login-container">
-  <div style="display: flex; justify-content: center; padding-top: 25px; padding-bottom: 10px; width: 100%;">
-    <img src="/Logo.png" alt="Company Logo" style="height: 35px; width: auto; object-fit: contain;">
-  </div>
+        /* Notice & Footer Text */
+        .security-notice {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            font-size: 0.75rem;
+            color: #64748b;
+            margin-top: 2rem;
+            text-align: center;
+            line-height: 1.4;
+        }
 
-  <div class="brand-title">LA Projects Portal</div>
-  <div class="brand-subtitle">Please enter your unique account credentials.</div>
-  
-  <!-- Client-side error prompt box container -->
-  <div id="errorBox" class="error-msg" style="display: none;">
-  Invalid username or password. (<span id="attemptCount">0</span> unsuccessful attempts)
-</div>
+        .footer-text {
+            font-size: 0.7rem;
+            color: #94a3b8;
+            text-align: center;
+            margin-top: 1rem;
+            line-height: 1.4;
+        }
 
-
-  <form id="loginForm" onsubmit="handleLogin(event)" autocomplete="off">
-    <div class="form-group">
-      <label for="username">Username</label>
-      <input type="text" id="username" placeholder="Enter username" autocomplete="off" required>
-    </div>
-
-    <div class="form-group">
-      <label for="password">Password</label>
-      <input type="password" id="password" placeholder="Enter password" autocomplete="off" required>
-    </div>
-
-    <button type="submit" class="btn-submit">Sign In</button>
-  </form>
-
-  <script>
-  // 4. FORCE REFRESH FIELD WIPE ON WINDOW FOCUS / PAGE LOAD
-  window.addEventListener('pageshow', function(event) {
-    document.getElementById('username').value = "";
-    document.getElementById('password').value = "";
-  });
-
-  // Keep your existing handleLogin(event) function directly below this...
-</script>
-  
-  <div class="footer-notice">
-    🔒 Authorized personnel view only. Active sessions are monitored.<br>
-    © 2026 SecurePortal. Built securely, Monitored & Maintained by LA projects Department.
-  </div>
-</div>
-
-<script>
-  function handleLogin(event) {
-  event.preventDefault();
-
-  const usernameInput = document.getElementById('username').value.trim();
-  const passwordInput = document.getElementById('password').value;
-  const errorBox = document.getElementById('errorBox');
-
-  // Submit credentials to your Vercel serverless gateway endpoint
-  fetch('/api/auth/login', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ username: usernameInput, password: passwordInput })
-  })
-  .then(res => res.json())
-  .then(data => {
-if (data.success) {
-  errorBox.style.display = "none";
-
-  // Clear the failed attempts tracker on a successful login
-  sessionStorage.removeItem("failed_login_attempts");   
-  // Save data values to your browser storage framework scope
-  localStorage.setItem("session_active", "true");
-  localStorage.setItem("session_user", data.user.username);
-
-  // CORRECTED: Overwrites the browser history so the 'Back' button won't loop back here
-  window.location.replace('/dashboard');
-} else {
- // 1. Retrieve the current failure count from memory or default to 0
-  let currentAttempts = parseInt(sessionStorage.getItem("failed_login_attempts")) || 0;
-  
-  // 2. Increment the counter by 1
-  currentAttempts += 1;
-  
-  // 3. Save the new count back to the browser session
-  sessionStorage.setItem("failed_login_attempts", currentAttempts);
-  
-  // 4. Inject the counter directly into the text span
-  document.getElementById("attemptCount").innerText = currentAttempts;
-  
-  // 5. Unhide and display the dynamic alert card element
-  errorBox.style.display = "block";
-}
-
-  })
-  .catch(err => {
-    console.error("Authentication Error:", err);
-    errorBox.innerText = "Network error. Please try again later.";
-    errorBox.style.display = "block";
-  });
-}
-
-</script>
-
-
-
-
-        /* Right Column: Automated Showcase Slideshow Viewport */
+        /* Right Side: Slideshow Viewport */
         .slideshow-column {
             flex: 1;
             position: relative;
@@ -310,10 +162,10 @@ if (data.success) {
             background-color: #0f172a;
         }
 
-        /* Horizontal Carousel Slider Array Track */
+        /* CSS-Only Slideshow Engine Track */
         .slideshow-engine {
             display: flex;
-            width: 300%; /* Spans across 3 distinct sliding frames */
+            width: 300%; /* Sized for 3 separate horizontal slider images */
             height: 100%;
             animation: slideLayoutAnimation 15s infinite ease-in-out;
         }
@@ -326,7 +178,7 @@ if (data.success) {
             background-repeat: no-repeat;
         }
 
-        /* Local Asset Targets - Matches your 1920x1080 public path assets */
+        /* Image targets from your project's public folder */
         .slide-1 { background-image: url('/slide1.jpg'); }
         .slide-2 { background-image: url('/slide2.jpg'); }
         .slide-3 { background-image: url('/slide3.jpg'); }
@@ -338,7 +190,7 @@ if (data.success) {
             pointer-events: none;
         }
 
-        /* Keyframe loop for panning 3 separate graphics assets */
+        /* Keyframes for sliding animation loop across 3 panels */
         @keyframes slideLayoutAnimation {
             0%, 28% { transform: translateX(0%); }
             33%, 61% { transform: translateX(-33.3333%); }
@@ -346,10 +198,10 @@ if (data.success) {
             100% { transform: translateX(0%); }
         }
 
-        /* Mobile Responsive Viewport System Collapse */
+        /* Responsive Breakpoint for Mobile Portrait Screens */
         @media (max-width: 768px) {
             .slideshow-column {
-                display: none; /* Safely strips the presentation track on narrow layouts */
+                display: none; /* Collapses slider area entirely on small screens */
             }
         }
     </style>
@@ -358,11 +210,11 @@ if (data.success) {
 
     <div class="page-container">
         
-        <!-- LEFT SIDE: Interactive Credentials Engine -->
+        <!-- LEFT COLUMN: Form Container -->
         <div class="login-column">
             <div class="login-card">
                 
-                
+                <!-- Logo Asset Component -->
                 <div class="logo-container">
                     <img src="/logo.png" alt="Company Logo" class="logo-img">
                 </div>
@@ -370,12 +222,12 @@ if (data.success) {
                 <h2 class="portal-title">LA Projects Portal</h2>
                 <p class="portal-subtitle">Please enter your unique account credentials.</p>
 
-                <!-- Functional Validation Error Box (Toggles context dynamically via backend routing if needed) -->
+                <!-- Error Warning Block -->
                 <div class="alert-error">
                     Invalid username or password. (0 unsuccessful attempts)
                 </div>
 
-                <!-- Functional Submission Form Structure -->
+                <!-- Input Submission Form Elements -->
                 <form action="#" method="POST" onsubmit="event.preventDefault();">
                     <div class="form-group">
                         <label class="form-label" for="username">Username</label>
@@ -403,7 +255,7 @@ if (data.success) {
             </div>
         </div>
 
-        <!-- RIGHT SIDE: Visual Background Presentation Runway -->
+        <!-- RIGHT COLUMN: Slideshow Track -->
         <div class="slideshow-column">
             <div class="slideshow-engine">
                 <div class="slide slide-1"></div>
