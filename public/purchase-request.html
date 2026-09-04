@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  //<meta charset="UTF-8">
-  //<meta name="viewport" content="width=device-width, initial-scale=1.0">
-  //<title>New Purchase Request</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>New Purchase Request</title>
 
   <!-- 🔒 SESSION SECURITY & BACK-BUTTON GUARD -->
   <script>
@@ -25,9 +25,6 @@
 
 
 
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>New Purchase Request</title>
   <style>
     :root {
       --bg-primary: #f8fafc;
@@ -260,7 +257,7 @@
 
 <div class="container">
   <div class="header-nav">
-    <a href="/dashboard" class="back-btn">â† Back to Dashboard</a>
+    <a href="/dashboard" class="back-btn">← Back to Dashboard</a>
   </div>
 
   <div class="card">
@@ -327,7 +324,7 @@
                 <td><input type="number" placeholder="0" min="0" class="stock-hand-input" style="width:100%;" required></td>
                 <td><input type="number" placeholder="0" min="1" class="order-qty-input" style="width:100%;" oninput="calculateRowAndTotal()" required></td>
                 <td><input type="number" placeholder="0.00" class="net-amt-input" style="width:100%;" readonly></td>
-                <td><button type="button" class="btn-remove" onclick="removeItem(this)">Ã—</button></td>
+                <td><button type="button" class="btn-remove" onclick="removeItem(this)">×</button></td>
               </tr>
             </tbody>
           </table>
@@ -368,7 +365,7 @@
       <td><input type="number" placeholder="0" min="0" class="stock-hand-input" style="width:100%;" required></td>
       <td><input type="number" placeholder="0" min="1" class="order-qty-input" style="width:100%;" oninput="calculateRowAndTotal()" required></td>
       <td><input type="number" placeholder="0.00" class="net-amt-input" style="width:100%;" readonly></td>
-      <td><button type="button" class="btn-remove" onclick="removeItem(this)">Ã—</button></td>
+      <td><button type="button" class="btn-remove" onclick="removeItem(this)">×</button></td>
     `;
     tbody.appendChild(row);
     calculateRowAndTotal();
