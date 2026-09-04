@@ -1,6 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <script>
+  // If a user clicks 'Back' and lands on the login page while STILL logged in,
+  // instantly bounce them back to the dashboard. This breaks the forward button.
+  function checkSessionAndRedirect() {
+    if (localStorage.getItem('userToken')) {
+      window.location.replace('/dashboard.html');
+    }
+  }
+
+  // Run on initial load
+  checkSessionAndRedirect();
+
+  // Run if they hit 'Back' into this page from the bfcache
+  window.addEventListener('pageshow', function (event) {
+    if (event.persisted) {
+      checkSessionAndRedirect();
+    }
+  });
+</script>
 
   <script>
   // Detects if the page was loaded from the browser's Back/Forward cache
