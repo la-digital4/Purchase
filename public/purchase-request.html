@@ -1,477 +1,96 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
-  <!-- 🛡️ ROUTE GUARD LOCK: Runs before anything else renders -->
-  <script>
-  // 1. Detect if the page is being pulled from the browser's hidden memory cache
-  window.addEventListener('pageshow', function (event) {
-    if (event.persisted || (window.performance && window.performance.navigation.type === 2)) {
-      // Force a hard reload from the server, wiping out the cached view
-      window.location.reload();
-    }
-  });
-
-  // 2. Extra safety: Check if the user is actually logged in.
-  // Replace 'userToken' with the actual key you use (e.g., localStorage, cookie, etc.)
-  if (!localStorage.getItem('userToken')) {
-    window.location.replace('/index.html'); 
-  }
-</script>
-
-  <script>
-    //(function () {
-      //const sessionActive = localStorage.getItem("session_active");
-      //const sessionUser = localStorage.getItem("session_user");
-
-      //if (sessionActive !== "true" || !sessionUser) {
-        //alert("🔒 Access Denied. Please authenticate to open the purchase portal.");
-        //localStorage.removeItem("session_active");
-        //localStorage.removeItem("session_user");
-        //window.location.replace("/"); // Evict visitor directly back to landing login
-      //}
-    //})();
-  </script>
-  <script>
-  // Detects if the page was loaded from the browser's Back/Forward cache
-  //window.addEventListener('pageshow', function (event) {
-    //if (event.persisted) {
-       //Force a hard reload from the server to re-trigger authentication checks
-      //window.location.reload();
-    //}
-  //});
-</script>
-
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>New Purchase Request</title>
-  <style>
-    :root {
-      --bg-primary: #f8fafc;
-      --panel-bg: #ffffff;
-      --text-main: #0f172a;
-      --text-muted: #64748b;
-      --accent: #2563eb;
-      --accent-hover: #1d4ed8;
-      --border: #e2e8f0;
-      --danger: #ef4444;
+
+  <!-- 🔒 SESSION SECURITY & BACK-BUTTON GUARD -->
+  <script>
+    // 1. If a logged-out user tries to access this page, instantly bounce them to login
+    if (localStorage.getItem("session_active") !== "true") {
+      window.location.replace('/');
     }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    }
+    // 2. Force a server reload if the page is pulled from the browser's back/forward memory cache (bfcache)
+    window.addEventListener('pageshow', function (event) {
+      if (event.persisted || (window.performance && window.performance.navigation.type === 2)) {
+        window.location.reload();
+      }
+    });
+  </script>
 
-    body {
-      background-color: var(--bg-primary);
-      color: var(--text-main);
-      padding: 2rem 1rem;
-    }
-
-    .container {
-      max-width: 1200px; /* Widened to fit the comprehensive table layout */
-      margin: 0 auto;
-    }
-
-    .header-nav {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 2rem;
-    }
-
-    .back-btn {
-      color: var(--text-muted);
-      text-decoration: none;
-      font-size: 0.9rem;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-
-    .back-btn:hover {
-      color: var(--accent);
-    }
-
-    .card {
-      background: var(--panel-bg);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 2rem;
-      box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05);
-    }
-
-    h1 {
-      font-size: 1.5rem;
-      margin-bottom: 1.5rem;
-      font-weight: 700;
-    }
-
-    .form-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1.25rem;
-      margin-bottom: 2rem;
-    }
-
-    @media (max-width: 600px) {
-      .form-grid { grid-template-columns: 1fr; }
-    }
-
-    .form-group {
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-    }
-
-    .form-group.full-width {
-      grid-column: 1 / -1;
-    }
-
-    label {
-      font-size: 0.85rem;
-      font-weight: 600;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-    }
-
-    input, select, textarea {
-      padding: 0.6rem;
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      font-size: 0.95rem;
-      color: var(--text-main);
-      outline: none;
-      transition: border-color 0.2s;
-    }
-
-    input:focus, select:focus, textarea:focus {
-      border-color: var(--accent);
-    }
-
-    /* Fixed styling for read-only dynamic values */
-    input[readonly] {
-      background-color: #f1f5f9;
-      color: #334155;
-      font-weight: 600;
-      cursor: not-allowed;
-    }
-
-    /* Items Table Styling */
-    .items-section {
-      margin-top: 2rem;
-      border-top: 1px solid var(--border);
-      padding-top: 2rem;
-    }
-
-    .table-container {
-      overflow-x: auto;
-      margin-top: 1rem;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      text-align: left;
-      font-size: 0.9rem;
-    }
-
-    th {
-      padding: 0.75rem 0.5rem;
-      border-bottom: 2px solid var(--border);
-      color: var(--text-muted);
-      font-weight: 600;
-      white-space: nowrap;
-    }
-
-    td {
-      padding: 0.5rem;
-      border-bottom: 1px solid var(--border);
-      vertical-align: middle;
-    }
-
-    .sno-cell {
-      text-align: center;
-      font-weight: 600;
-      color: var(--text-muted);
-    }
-
-    .btn-add {
-      background: none;
-      border: 1px dashed var(--accent);
-      color: var(--accent);
-      padding: 0.5rem 1rem;
-      border-radius: 6px;
-      cursor: pointer;
-      font-weight: 500;
-      margin-top: 1rem;
-      transition: all 0.2s;
-    }
-
-    .btn-add:hover {
-      background: #eff6ff;
-    }
-
-    .btn-remove {
-      background: none;
-      border: none;
-      color: var(--danger);
-      cursor: pointer;
-      font-size: 1.25rem;
-      display: flex;
-      margin: 0 auto;
-    }
-
-    /* Summary Bar */
-    .summary-bar {
-      display: flex;
-      justify-content: flex-end;
-      align-items: center;
-      gap: 1rem;
-      margin-top: 1.5rem;
-      font-size: 1.2rem;
-      font-weight: 700;
-    }
-
-    /* Action Buttons */
-    .actions {
-      display: flex;
-      justify-content: flex-end;
-      gap: 1rem;
-      margin-top: 2rem;
-    }
-
-    .btn {
-      padding: 0.75rem 1.5rem;
-      border-radius: 6px;
-      font-size: 1rem;
-      font-weight: 600;
-      cursor: pointer;
-      border: none;
-    }
-
-    .btn-submit {
-      background-color: var(--accent);
-      color: white;
-    }
-
-    .btn-submit:hover {
-      background-color: var(--accent-hover);
-    }
-
-    .btn-cancel {
-      background-color: transparent;
-      border: 1px solid var(--border);
-      color: var(--text-muted);
-    }
-
-    .btn-cancel:hover {
-      background-color: #f1f5f9;
-    }
-  </style>
+  <!-- Your existing CSS stylesheets or Tailwind links go here -->
 </head>
 <body>
 
-<div class="container">
-  <div class="header-nav">
-    <a href="/dashboard" class="back-btn">← Back to Dashboard</a>
-  </div>
+  <!-- Your existing navigation/layout container wrapper -->
+  <div>
+    <!-- Back to Dashboard Link: Ensure it targets the clean extensionless path -->
+    <a href="/dashboard" id="backToDashboard">← Back to Dashboard</a>
 
-  <div class="card">
     <h1>Create Purchase Request</h1>
-    
-    <form id="purchaseForm" onsubmit="handleSubmit(event)">
-      <!-- Request Meta Details -->
-      <div class="form-grid">
-        <div class="form-group">
-          <label for="department">Department</label>
-          <select id="department" required>
-            <option value="">Select Department</option>
-            <option value="inventory">Inventory & Logistics</option>
-            <option value="it">Information Technology</option>
-            <option value="ops">Operations</option>
-            <option value="procurement">Procurement</option>
-          </select>
-        </div>
 
-        <div class="form-group">
-          <label for="priority">Priority Level</label>
-          <select id="priority" required>
-            <option value="low">Low</option>
-            <option value="medium" selected>Medium</option>
-            <option value="high">High</option>
-            <option value="urgent">Urgent</option>
-          </select>
-        </div>
+    <form id="purchaseRequestForm">
+      <label>Department</label>
+      <select name="department">
+        <option value="">Select Department</option>
+        <option value="inventory">Inventory & Logistics</option>
+        <option value="it">Information Technology</option>
+        <option value="operations">Operations</option>
+        <option value="procurement">Procurement</option>
+      </select>
 
-        <div class="form-group full-width">
-          <label for="purpose">Business Justification / Remarks</label>
-          <textarea id="purpose" rows="2" placeholder="Provide extra order details or stock justifications..." required></textarea>
-        </div>
-      </div>
+      <label>Priority Level</label>
+      <select name="priority">
+        <option value="low">Low</option>
+        <option value="medium">Medium</option>
+        <option value="high">High</option>
+        <option value="urgent">Urgent</option>
+      </select>
 
-      <!-- Itemized Request Table -->
-      <div class="items-section">
-        <label>Inventory Order Items</label>
-        <div class="table-container">
-          <table>
-            <thead>
-              <tr>
-                <th style="width: 4%; text-align: center;">S.No</th>
-                <th style="width: 16%;">Vendor Name</th>
-                <th style="width: 18%;">Product Name</th>
-                <th style="width: 12%;">Packing Details</th>
-                <th style="width: 11%;">Unit Cost ($)</th>
-                <th style="width: 10%;">Par Stock Level</th>
-                <th style="width: 10%;">Stock In Hand</th>
-                <th style="width: 9%;">Order Qty</th>
-                <th style="width: 11%;">Net Amt ($)</th>
-                <th style="width: 4%;"></th>
-              </tr>
-            </thead>
-            <tbody id="itemTableBody">
-              <!-- Initial Row 1 -->
-              <tr>
-                <td class="sno-cell">1</td>
-                <td><input type="text" placeholder="Vendor Co." style="width:100%;" required></td>
-                <td><input type="text" placeholder="Product details" style="width:100%;" required></td>
-                <td><input type="text" placeholder="e.g., Box of 10" style="width:100%;" required></td>
-                <td><input type="number" placeholder="0.00" step="0.01" min="0" class="unit-cost-input" style="width:100%;" oninput="calculateRowAndTotal()" required></td>
-                <td><input type="number" placeholder="0" min="0" class="par-stock-input" style="width:100%;" required></td>
-                <td><input type="number" placeholder="0" min="0" class="stock-hand-input" style="width:100%;" required></td>
-                <td><input type="number" placeholder="0" min="1" class="order-qty-input" style="width:100%;" oninput="calculateRowAndTotal()" required></td>
-                <td><input type="number" placeholder="0.00" class="net-amt-input" style="width:100%;" readonly></td>
-                <td><button type="button" class="btn-remove" onclick="removeItem(this)">×</button></td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        
-        <button type="button" class="btn-add" onclick="addItem()">+ Add Row</button>
-      </div>
+      <label>Business Justification / Remarks</label>
+      <textarea name="remarks"></textarea>
 
-      <!-- Total Calculator Banner -->
-      <div class="summary-bar">
-        <span>Estimated Grand Total:</span>
-        <span id="grandTotal">$0.00</span>
-      </div>
+      <!-- Inventory Order Items Table Section -->
+      <h3>Inventory Order Items</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>S.No</th>
+            <th>Vendor Name</th>
+            <th>Product Name</th>
+            <th>Packing Details</th>
+            <th>Unit Cost ($)</th>
+            <th>Par Stock Level</th>
+            <th>Stock In Hand</th>
+            <th>Order Qty</th>
+            <th>Net Amt ($)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>1</td>
+            <td><!-- Input fields --></td>
+            <!-- Remaining table cell items -->
+            <td><button type="button">×</button></td>
+          </tr>
+        </tbody>
+      </table>
 
-      <!-- Submit Elements -->
-      <div class="actions">
-        <button type="button" class="btn btn-cancel" onclick="window.location.href='/dashboard'">Cancel</button>
-        <button type="submit" class="btn btn-submit">Submit Request</button>
-      </div>
+      <button type="button">+ Add Row</button>
+      <p>Estimated Grand Total: $0.00</p>
+
+      <button type="button" id="cancelBtn">Cancel</button>
+      <button type="submit">Submit Request</button>
     </form>
   </div>
-</div>
 
-<script>
-  // Dynamically inject a new row with proper Serial Number sequencing
-  function addItem() {
-    const tbody = document.getElementById('itemTableBody');
-    const nextSNo = tbody.rows.length + 1;
-    const row = document.createElement('tr');
-    
-        row.innerHTML = `
-      <td class="sno-cell">${nextSNo}</td>
-      <td><input type="text" placeholder="Vendor Co." style="width:100%;" required></td>
-      <td><input type="text" placeholder="Product details" style="width:100%;" required></td>
-      <td><input type="text" placeholder="e.g., Box of 10" style="width:100%;" required></td>
-      <td><input type="number" placeholder="0.00" step="0.01" min="0" class="unit-cost-input" style="width:100%;" oninput="calculateRowAndTotal()" required></td>
-      <td><input type="number" placeholder="0" min="0" class="par-stock-input" style="width:100%;" required></td>
-      <td><input type="number" placeholder="0" min="0" class="stock-hand-input" style="width:100%;" required></td>
-      <td><input type="number" placeholder="0" min="1" class="order-qty-input" style="width:100%;" oninput="calculateRowAndTotal()" required></td>
-      <td><input type="number" placeholder="0.00" class="net-amt-input" style="width:100%;" readonly></td>
-      <td><button type="button" class="btn-remove" onclick="removeItem(this)">×</button></td>
-    `;
-    tbody.appendChild(row);
-    calculateRowAndTotal();
-  }
-  // Remove targeted row and re-sequence table elements
-  function removeItem(button) {
-    const tbody = document.getElementById('itemTableBody');
-    if (tbody.rows.length > 1) {
-      button.closest('tr').remove();
-      updateSerialNumbers();
-      calculateRowAndTotal();
-    } else {
-      alert("Your order request must contain at least one item row.");
-    }
-  }
-
-  // Refreshes the display order of S.No column elements 
-  function updateSerialNumbers() {
-    const rows = document.querySelectorAll('#itemTableBody tr');
-    rows.forEach((row, index) => {
-      row.querySelector('.sno-cell').innerText = index + 1;
+  <!-- 💡 Extra JavaScript Logic for the Cancel Button -->
+  <script>
+    document.getElementById('cancelBtn').addEventListener('click', function() {
+      window.location.href = '/dashboard';
     });
-  }
-
-  // Processes math operations: row-specific calculations and final form total sum updates
-  function calculateRowAndTotal() {
-    let grandTotal = 0;
-    const rows = document.querySelectorAll('#itemTableBody tr');
-    
-    rows.forEach(row => {
-      const unitCost = parseFloat(row.querySelector('.unit-cost-input').value) || 0;
-      const orderQty = parseFloat(row.querySelector('.order-qty-input').value) || 0;
-      
-      // Compute Net Amount per row
-      const netAmt = unitCost * orderQty;
-      row.querySelector('.net-amt-input').value = netAmt ? netAmt.toFixed(2) : "";
-      
-      grandTotal += netAmt;
-    });
-
-    document.getElementById('grandTotal').innerText = `$${grandTotal.toFixed(2)}`;
-  }
-  // Form Submission Configuration Hook
-  function handleSubmit(event) {
-    event.preventDefault();
-    
-    // 1. Gather global form metadata
-    const requestData = {
-      department: document.getElementById('department').value,
-      priority: document.getElementById('priority').value,
-      purpose: document.getElementById('purpose').value,
-      requestedAt: new Date().toISOString(),
-      items: []
-    };
-
-    // 2. Loop through table rows to harvest structured items
-    const rows = document.querySelectorAll('#itemTableBody tr');
-    rows.forEach(row => {
-      requestData.items.push({
-        vendorName: row.cells[1].querySelector('input').value,
-        productName: row.cells[2].querySelector('input').value,
-        packingDetails: row.cells[3].querySelector('input').value,
-        unitCost: parseFloat(row.querySelector('.unit-cost-input').value) || 0,
-        parStockLevel: parseInt(row.querySelector('.par-stock-input').value, 10) || 0,
-        stockInHand: parseInt(row.querySelector('.stock-hand-input').value, 10) || 0,
-        orderQty: parseInt(row.querySelector('.order-qty-input').value, 10) || 0,
-        netAmt: parseFloat(row.querySelector('.net-amt-input').value) || 0
-      });
-    });
-
-    // 3. Log the clean JSON payload (View in browser inspect -> Console)
-    console.log("Submitting Purchase Request Payload:", requestData);
-
-    // 4. Temporary success alert (Replace this block with your fetch API call)
-    alert(`Success! Captured ${requestData.items.length} items for submission. Check your browser console to see the formatted data structure.`);
-    
-    /* 
-    // FUTURE BACKEND INTEGRATION TEMPLATE:
-    fetch('/api/purchase-requests', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(requestData)
-    })
-    .then(res => res.json())
-    .then(data => { window.location.href = '/dashboard'; })
-    .catch(err => alert('Submission failed: ' + err));
-    */
-  }
-</script>
+  </script>
+</body>
+</html>
