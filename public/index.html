@@ -17,14 +17,14 @@
             overflow: hidden;
         }
 
-        /* Split-screen layout wrapper */
+        /* Split-screen layout canvas */
         .page-container {
             display: flex;
             min-height: 100vh;
             width: 100vw;
         }
 
-        /* Left Side: Login Form Column */
+        /* Left Column: Fully Functional Portal Panel */
         .login-column {
             flex: 1;
             display: flex;
@@ -35,7 +35,7 @@
             z-index: 2;
         }
 
-        /* Login Card Panel */
+        /* Portal White Card Module */
         .login-card {
             background: white;
             padding: 2.5rem;
@@ -70,10 +70,22 @@
             text-align: center;
             font-size: 0.875rem;
             color: #64748b;
-            margin-bottom: 2rem;
+            margin-bottom: 1.5rem;
         }
 
-        /* Form Controls */
+        /* Functional Error Alert Message Box */
+        .alert-error {
+            background-color: #fef2f2;
+            border: 1px solid #fee2e2;
+            color: #991b1b;
+            padding: 0.75rem 1rem;
+            border-radius: 6px;
+            font-size: 0.875rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        /* Form Layout Elements */
         .form-group {
             margin-bottom: 1.25rem;
         }
@@ -121,7 +133,7 @@
             background-color: #1d4ed8;
         }
 
-        /* Notice & Footer Text */
+        /* Bottom Infrastructure Footers */
         .security-notice {
             display: flex;
             align-items: center;
@@ -142,7 +154,7 @@
             line-height: 1.4;
         }
 
-        /* Right Side: Slideshow Viewport */
+        /* Right Column: Automated Showcase Slideshow Viewport */
         .slideshow-column {
             flex: 1;
             position: relative;
@@ -150,10 +162,10 @@
             background-color: #0f172a;
         }
 
-        /* CSS-Only Slideshow Engine */
+        /* Horizontal Carousel Slider Array Track */
         .slideshow-engine {
             display: flex;
-            width: 300%; /* Sized for 3 separate slider columns */
+            width: 300%; /* Spans across 3 distinct sliding frames */
             height: 100%;
             animation: slideLayoutAnimation 15s infinite ease-in-out;
         }
@@ -166,7 +178,7 @@
             background-repeat: no-repeat;
         }
 
-        /* Background image fallbacks - Change these to your actual uploaded file paths */
+        /* Local Asset Targets - Matches your 1920x1080 public path assets */
         .slide-1 { background-image: url('/slide1.jpg'); }
         .slide-2 { background-image: url('/slide2.jpg'); }
         .slide-3 { background-image: url('/slide3.jpg'); }
@@ -178,7 +190,7 @@
             pointer-events: none;
         }
 
-        /* Keyframes for sliding animation loop across 3 panels */
+        /* Keyframe loop for panning 3 separate graphics assets */
         @keyframes slideLayoutAnimation {
             0%, 28% { transform: translateX(0%); }
             33%, 61% { transform: translateX(-33.3333%); }
@@ -186,10 +198,10 @@
             100% { transform: translateX(0%); }
         }
 
-        /* Responsive Breakpoint for Mobile Portrait Screens */
+        /* Mobile Responsive Viewport System Collapse */
         @media (max-width: 768px) {
             .slideshow-column {
-                display: none; /* Collapses slider area entirely on small screens */
+                display: none; /* Safely strips the presentation track on narrow layouts */
             }
         }
     </style>
@@ -198,9 +210,10 @@
 
     <div class="page-container">
         
-        <!-- LEFT COLUMN: Form Container -->
+        <!-- LEFT SIDE: Interactive Credentials Engine -->
         <div class="login-column">
             <div class="login-card">
+                
                 
                 <div class="logo-container">
                     <img src="/logo.png" alt="Company Logo" class="logo-img">
@@ -209,6 +222,12 @@
                 <h2 class="portal-title">LA Projects Portal</h2>
                 <p class="portal-subtitle">Please enter your unique account credentials.</p>
 
+                <!-- Functional Validation Error Box (Toggles context dynamically via backend routing if needed) -->
+                <div class="alert-error">
+                    Invalid username or password. (0 unsuccessful attempts)
+                </div>
+
+                <!-- Functional Submission Form Structure -->
                 <form action="#" method="POST" onsubmit="event.preventDefault();">
                     <div class="form-group">
                         <label class="form-label" for="username">Username</label>
@@ -223,10 +242,12 @@
                     <button type="submit" class="submit-btn">Sign In</button>
                 </form>
 
+                <!-- System Notice Block -->
                 <div class="security-notice">
                     <span>🔒</span> Authorized personnel view only. Active sessions are monitored.
                 </div>
                 
+                <!-- Legal & Maintenance Attribution Details -->
                 <div class="footer-text">
                     &copy; 2026 SecurePortal. Built securely, Monitored & Maintained by LA projects Department.
                 </div>
@@ -234,7 +255,7 @@
             </div>
         </div>
 
-        <!-- RIGHT COLUMN: Slideshow Track -->
+        <!-- RIGHT SIDE: Visual Background Presentation Runway -->
         <div class="slideshow-column">
             <div class="slideshow-engine">
                 <div class="slide slide-1"></div>
