@@ -232,7 +232,7 @@
         <ul class="nav-links">
           <li><a href="/dashboard" class="nav-item active">Overview</a></li>
           <li><a href="/purchase-request" class="nav-item">New Request</a></li>
-          <li><a href="#" id="changePasswordLink" style="color: #2563eb; text-decoration: none; font-weight: 500;"> 🔒 Change Password </a></li>
+          <li><a href="#" id="changePasswordLink" style="color: #2563eb; text-decoration: none; font-weight: 500;">🔒 Change Password</a></li>
         </ul>
       </nav>
     </div>
@@ -314,70 +314,102 @@
     
     window.location.replace("/");
   }
-</script>
-<!-- 1. The Clickable Dashboard Link -->
-<!-- href="#" id="changePasswordLink" style="color: #2563eb; text-decoration: none; font-weight: 500;">
-   -- 🔒 Change Password -->
+
+<!-- The Clickable Dashboard Link -->
 
 
-<!-- Space padding -->
-<div style="margin-top: 20px;"></div>
-
-<!-- 2. The Password Box Container (Notice 'display: none' keeps it hidden initially) -->
-<div id="passwordBoxContainer" style="display: none; max-width: 400px; padding: 20px; border: 1px solid #e4e4e7; border-radius: 8px; font-family: sans-serif; background: #fff; position: relative;">
+<!-- THE MODAL OVERLAY WRAPPER (Starts hidden via display: none) -->
+<div id="passwordBoxContainer" style="
+    display: none; 
+    position: fixed; 
+    top: 0; 
+    left: 0; 
+    width: 100%; 
+    height: 100%; 
+    background-color: rgba(0, 0, 0, 0.4); /* Dims the dashboard behind it */
+    z-index: 9999; /* Forces it above all other elements */
+    justify-content: center; 
+    align-items: center;
+">
     
-    <!-- Optional Close Button inside the box -->
-    <button id="closeBoxBtn" style="position: absolute; top: 10px; right: 10px; background: none; border: none; font-size: 16px; cursor: pointer; color: #9ca3af;">✕</button>
+    <!-- THE CENTERED CONTENT CARD -->
+    <div style="
+        background: #fff; 
+        width: 100%; 
+        max-width: 400px; 
+        padding: 24px; 
+        border-radius: 8px; 
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15); 
+        position: relative; 
+        font-family: sans-serif;
+    ">
+        
+        <!-- Close Button (✕) -->
+        <button id="closeBoxBtn" style="
+            position: absolute; 
+            top: 14px; 
+            right: 14px; 
+            background: none; 
+            border: none; 
+            font-size: 16px; 
+            cursor: pointer; 
+            color: #9ca3af;
+        ">✕</button>
 
-    <h3 style="margin-top: 0; color: #18181b; margin-bottom: 16px;">Change Password</h3>
-    
-    <form id="changePasswordForm">
-        <!-- ... (Your input fields go here as defined in the previous block) ... -->
-        <div style="margin-bottom: 12px;">
-            <label style="display:block; font-size:14px; margin-bottom:4px; color:#4b5563;">Current Password</label>
-            <input type="password" id="oldPassword" style="width:100%; padding:8px; border:1px solid #d1d5db; border-radius:4px;" required />
-        </div>
-        <div style="margin-bottom: 12px;">
-            <label style="display:block; font-size:14px; margin-bottom:4px; color:#4b5563;">New Password</label>
-            <input type="password" id="newPassword" style="width:100%; padding:8px; border:1px solid #d1d5db; border-radius:4px;" required />
-        </div>
-        <div style="margin-bottom: 16px;">
-            <label style="display:block; font-size:14px; margin-bottom:4px; color:#4b5563;">Confirm New Password</label>
-            <input type="password" id="confirmPassword" style="width:100%; padding:8px; border:1px solid #d1d5db; border-radius:4px;" required />
-        </div>
-        <button type="submit" style="width:100%; background:#2563eb; color:#fff; border:none; padding:10px; border-radius:4px; cursor:pointer; font-weight:bold;">
-            Update Password
-        </button>
-    </form>
-    
-    <div id="passwordMessage" style="margin-top: 12px; font-size: 14px; font-weight: 500;"></div>
+        <h3 style="margin-top: 0; color: #18181b; margin-bottom: 16px;">Change Password</h3>
+        
+        <form id="changePasswordForm">
+            <div style="margin-bottom: 12px;">
+                <label style="display:block; font-size:14px; margin-bottom:4px; color:#4b5563;">Current Password</label>
+                <input type="password" id="oldPassword" style="width:100%; padding:8px; border:1px solid #d1d5db; border-radius:4px; box-sizing: border-box;" required />
+            </div>
+            
+            <div style="margin-bottom: 12px;">
+                <label style="display:block; font-size:14px; margin-bottom:4px; color:#4b5563;">New Password</label>
+                <input type="password" id="newPassword" style="width:100%; padding:8px; border:1px solid #d1d5db; border-radius:4px; box-sizing: border-box;" required />
+            </div>
+            
+            <div style="margin-bottom: 16px;">
+                <label style="display:block; font-size:14px; margin-bottom:4px; color:#4b5563;">Confirm New Password</label>
+                <input type="password" id="confirmPassword" style="width:100%; padding:8px; border:1px solid #d1d5db; border-radius:4px; box-sizing: border-box;" required />
+            </div>
+            
+            <button type="submit" style="width:100%; background:#2563eb; color:#fff; border:none; padding:10px; border-radius:4px; cursor:pointer; font-weight:bold;">
+                Update Password
+            </button>
+        </form>
+        
+        <div id="passwordMessage" style="margin-top: 12px; font-size: 14px; font-weight: 500;"></div>
+    </div>
 </div>
 
 <script>
-// Grab references to your HTML elements
 const changePasswordLink = document.getElementById('changePasswordLink');
 const passwordBoxContainer = document.getElementById('passwordBoxContainer');
 const closeBoxBtn = document.getElementById('closeBoxBtn');
 
-// Action A: Listen for clicks on the "Change Password" link
+// 1. Open the box centered on click
 changePasswordLink.addEventListener('click', (event) => {
-    event.preventDefault(); // Stops the webpage from scrolling to the top or changing pages
-    
-    // Toggle state: If it's hidden, show it. If it's open, hide it.
-    if (passwordBoxContainer.style.display === 'none') {
-        passwordBoxContainer.style.display = 'block';
-    } else {
-        passwordBoxContainer.style.display = 'none';
-    }
+    event.preventDefault();
+    passwordBoxContainer.style.display = 'flex'; -- Uses flex alignment to anchor everything to the exact center
 });
 
-// Action B: Listen for clicks on the optional "✕" close button inside the box
-closeBoxBtn.addEventListener('click', () => {
+// 2. Close the box and reset text elements cleanly
+function closeModal() {
     passwordBoxContainer.style.display = 'none';
-    document.getElementById('changePasswordForm').reset(); // Resets input text fields automatically
-    document.getElementById('passwordMessage').innerText = ""; // Clears status text hints
+    document.getElementById('changePasswordForm').reset();
+    document.getElementById('passwordMessage').innerText = "";
+}
+
+closeBoxBtn.addEventListener('click', closeModal);
+
+// Optional Add-on: Close the overlay instantly if the user clicks anywhere on the dark background mask
+passwordBoxContainer.addEventListener('click', (event) => {
+    if (event.target === passwordBoxContainer) {
+        closeModal();
+    }
 });
 </script>
-  
+
 </body>
 </html>
