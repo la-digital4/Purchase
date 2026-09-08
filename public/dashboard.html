@@ -367,46 +367,65 @@
 <!-- ==========================================
      1. LOAD THIRD-PARTY LIBRARIES FIRST
      ========================================== -->
-<!-- REPLACE the old jsdelivr line with this link: -->
-<script src="https://unpkg.com"></script>
-
+<!-- ==========================================
+     1. DEPLOY ROCK-SOLID GLOBAL CDN NETWORK
+     ========================================== -->
+<!-- Swapped to unpkg network backup to completely avoid jsdelivr timeout hangs -->
+<script src="https://unpkg.com/@supabase/supabase-js@2"></script>
 
 <!-- ==========================================
-     2. UNIFIED DASHBOARD CONTROLLER SCRIPT
+     2. UNIFIED DASHBOARD APPLICATION CONTROLLER
      ========================================== -->
 <script>
-  // Global variable to hold active user name across functions
+  // --- A. SECURE INITIALIZATION LAYER (Lives outside event blocks to prevent freezing) ---
+  const supabaseUrl = 'https://odxoizuukbawoqlvdslx.supabase.co'; // <-- Drop your real project URL here
+  const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9keG9penV1a2Jhd29xbHZkc2x4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg0MzYzMjQsImV4cCI6MjEwNDAxMjMyNH0.seSaovzESK_knCDGhqOHyjyRiZXyPUjZmxFfr1butaA';    // <-- Drop your real anon public key here
+  
+  let client = null;
   let activeUsername = "Guest";
 
-  // Runs automatically when the dashboard finishes loading in memory
+  // Safely initialize client if the library script finished downloading
+  try {
+    if (window.supabase) {
+      // Destructure initialization package cleanly matching CDN architecture standards
+      const { createClient } = window.supabase;
+      client = createClient(supabaseUrl, supabaseKey);
+    } else {
+      console.error("Critical Warning: Supabase CDN resource could not be reached over this network.");
+    }
+  } catch (initError) {
+    console.error("Database connection configuration failed:", initError);
+  }
+
+  // --- B. RUNS AUTOMATICALLY WHEN PAGE ENGINE RENDERS ---
   document.addEventListener("DOMContentLoaded", () => {
     
-    // A. SESSION & DISPLAY NAME LOGIC
+    // 1. POPULATE DISPLAY AND ACTIVE USERS
     const activeUser = localStorage.getItem("session_user");
     if (activeUser) {
-      activeUsername = activeUser; // Dynamically sets your active user session name!
+      activeUsername = activeUser; 
       const nameDisplayEl = document.getElementById("displayName");
       if (nameDisplayEl) {
         nameDisplayEl.innerText = activeUser;
       }
     }
 
-    // B. PASSWORD MODAL CONTROLLER BINDINGS
+    // 2. PASSWORD DIALOG OVERLAY INTERACTION RULES
     const changePasswordLink = document.getElementById('changePasswordLink');
     const passwordBoxContainer = document.getElementById('passwordBoxContainer');
     const closeBoxBtn = document.getElementById('closeBoxBtn');
     const changePasswordForm = document.getElementById('changePasswordForm');
     const msgDiv = document.getElementById('passwordMessage');
 
-    // Toggle Modal Opening State safely
+    // Safe binding click handler to open change password panel centered
     if (changePasswordLink && passwordBoxContainer) {
       changePasswordLink.addEventListener('click', (event) => {
         event.preventDefault();
-        passwordBoxContainer.style.display = 'flex'; // Reveals centered overlay card
+        passwordBoxContainer.style.display = 'flex'; // Triggers flex centering overlay card logic
       });
     }
 
-    // Close Modal helper function
+    // Clean closer reset function
     function closeModal() {
       if (passwordBoxContainer) passwordBoxContainer.style.display = 'none';
       if (changePasswordForm) changePasswordForm.reset();
@@ -423,58 +442,70 @@
       });
     }
 
-    // C. SUBMIT EVENT HANDLER FOR CHANGE PASSWORD
+    // 3. SECURE PASS CHANGE TRANSACTION LOGIC
     if (changePasswordForm) {
-  changePasswordForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    
-    const oldPassword = document.getElementById('oldPassword').value;
-    const newPassword = document.getElementById('newPassword').value;
-    const confirmPassword = document.getElementById('confirmPassword').value;
-    
-    if (newPassword !== confirmPassword) {
-        msgDiv.style.color = '#dc2626';
-        msgDiv.innerText = "Error: New passwords do not match.";
-        return;
-    }
+      changePasswordForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        if (!msgDiv) return; // Escape boundary protection
 
-    msgDiv.style.color = '#4b5563';
-    msgDiv.innerText = "Processing change...";
+        const oldPassword = document.getElementById('oldPassword').value;
+        const newPassword = document.getElementById('newPassword').value;
+        const confirmPassword = document.getElementById('confirmPassword').value;
+        
+        if (newPassword !== confirmPassword) {
+            msgDiv.style.color = '#dc2626';
+            msgDiv.innerText = "Error: New passwords do not match.";
+            return;
+        }
 
-    try {
-        // 1. Drop your live credentials here (Ensure no trailing spaces)
-        const supabaseUrl = 'https://odxoizuukbawoqlvdslx.supabase.co'; 
-        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9keG9penV1a2Jhd29xbHZkc2x4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg0MzYzMjQsImV4cCI6MjEwNDAxMjMyNH0.seSaovzESK_knCDGhqOHyjyRiZXyPUjZmxFfr1butaA';
+        if (!client) {
+            msgDiv.style.color = '#dc2626';
+            msgDiv.innerText = "Configuration Error: Connection client not initialized. Check your credentials.";
+            return;
+        }
 
-        // 2. Initialize using standard direct invocation (Cleaned up the slow message block)
-        const client = window.supabase.createClient(supabaseUrl, supabaseKey);
+        msgDiv.style.color = '#4b5563';
+        msgDiv.innerText = "Processing change...";
 
-        // 3. Execute the secure check on your users table
-        const { data: isSuccess, error } = await client
-            .rpc('change_user_password', {
+        try {
+            // Execute the secure check on your users table via RPC
+            const { data: isSuccess, error } = await client.rpc('change_user_password', {
                 input_username: activeUsername, 
                 old_password: oldPassword,
                 new_password: newPassword
             });
 
-        if (error) {
+            if (error) {
+                msgDiv.style.color = '#dc2626';
+                msgDiv.innerText = `System Error: ${error.message}`;
+            } else if (isSuccess) {
+                msgDiv.style.color = '#16a34a';
+                msgDiv.innerText = "Success! Password updated successfully.";
+                setTimeout(closeModal, 1500); 
+            } else {
+                msgDiv.style.color = '#dc2626';
+                msgDiv.innerText = "Error: Current password is incorrect.";
+            }
+        } catch (err) {
             msgDiv.style.color = '#dc2626';
-            msgDiv.innerText = `System Error: ${error.message}`;
-        } else if (isSuccess) {
-            msgDiv.style.color = '#16a34a';
-            msgDiv.innerText = "Success! Password updated successfully.";
-            setTimeout(closeModal, 1500); 
-        } else {
-            msgDiv.style.color = '#dc2626';
-            msgDiv.innerText = "Error: Current password is incorrect.";
+            msgDiv.innerText = `Unexpected Error: ${err.message}`;
         }
-    } catch (err) {
-        msgDiv.style.color = '#dc2626';
-        msgDiv.innerText = `System Error: ${err.message}`;
-        console.error(err);
+      });
     }
   });
-}
+
+  // --- C. SECURE SYSTEM LOGOUT FUNCTION (Kept in global view window space) ---
+  function handleLogout() {
+    alert("Logging you out securely... clearing local web variables.");
+    
+    // Wipe all session markers cleanly
+    localStorage.removeItem("session_active");
+    localStorage.removeItem("session_user");
+    
+    // Redirect instantly to index/login root page
+    window.location.replace("/");
+  }
 </script>
 
 </body>
