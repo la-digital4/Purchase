@@ -384,31 +384,85 @@
 </div>
 
 <script>
-const changePasswordLink = document.getElementById('changePasswordLink');
-const passwordBoxContainer = document.getElementById('passwordBoxContainer');
-const closeBoxBtn = document.getElementById('closeBoxBtn');
+    // 1. GET YOUR ELEMENTS FIRST (This runs instantly)
+    const changePasswordLink = document.getElementById('changePasswordLink');
+    const passwordBoxContainer = document.getElementById('passwordBoxContainer');
+    const closeBoxBtn = document.getElementById('closeBoxBtn');
+    const changePasswordForm = document.getElementById('changePasswordForm');
+    const msgDiv = document.getElementById('passwordMessage');
 
-// 1. Open the box centered on click
-changePasswordLink.addEventListener('click', (event) => {
-    event.preventDefault();
-    passwordBoxContainer.style.display = 'flex'; -- Uses flex alignment to anchor everything to the exact center
-});
+    // 2. TOGGLE VISIBILITY LISTENERS (This will now open the box no matter what)
+    changePasswordLink.addEventListener('click', (event) => {
+        event.preventDefault();
+        passwordBoxContainer.style.display = 'flex'; // Opens the centered box
+    });
 
-// 2. Close the box and reset text elements cleanly
-function closeModal() {
-    passwordBoxContainer.style.display = 'none';
-    document.getElementById('changePasswordForm').reset();
-    document.getElementById('passwordMessage').innerText = "";
-}
-
-closeBoxBtn.addEventListener('click', closeModal);
-
-// Optional Add-on: Close the overlay instantly if the user clicks anywhere on the dark background mask
-passwordBoxContainer.addEventListener('click', (event) => {
-    if (event.target === passwordBoxContainer) {
-        closeModal();
+    function closeModal() {
+        passwordBoxContainer.style.display = 'none';
+        changePasswordForm.reset();
+        msgDiv.innerText = "";
     }
-});
+
+    closeBoxBtn.addEventListener('click', closeModal);
+
+    passwordBoxContainer.addEventListener('click', (event) => {
+        if (event.target === passwordBoxContainer) {
+            closeModal();
+        }
+    });
+
+    // 3. INITIALIZE SUPABASE INSIDE THE SUBMIT EVENT (Prevents page crashes)
+    changePasswordForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const oldPassword = document.getElementById('oldPassword').value;
+        const newPassword = document.getElementById('newPassword').value;
+        const confirmPassword = document.getElementById('confirmPassword').value;
+        
+        if (newPassword !== confirmPassword) {
+            msgDiv.style.color = '#dc2626';
+            msgDiv.innerText = "Error: New passwords do not match.";
+            return;
+        }
+
+        msgDiv.style.color = '#4b5563';
+        msgDiv.innerText = "Processing change...";
+
+        try {
+            // Put your actual keys here. If they are placeholders, the code will jump to the catch block safely!
+            const supabaseUrl = 'https://odxoizuukbawoqlvdslx.supabase.co';
+            const supabaseKey = 'sb_publishable_DAYJQI8KSVY2kawIPsQrrw_2-zo1PDt';
+            
+            if (supabaseUrl.includes('YOUR_SUPABASE')) {
+                throw new Error("Supabase URLs have not been configured yet.");
+            }
+
+            const client = supabase.createClient(supabaseUrl, supabaseKey);
+            const activeUsername = "Venkatesh"; 
+
+            const { data: isSuccess, error } = await client
+                .rpc('change_user_password', {
+                    input_username: activeUsername,
+                    old_password: oldPassword,
+                    new_password: newPassword
+                });
+
+            if (error) {
+                msgDiv.style.color = '#dc2626';
+                msgDiv.innerText = `System Error: ${error.message}`;
+            } else if (isSuccess) {
+                msgDiv.style.color = '#16a34a';
+                msgDiv.innerText = "Success! Password updated successfully.";
+                setTimeout(closeModal, 1500); 
+            } else {
+                msgDiv.style.color = '#dc2626';
+                msgDiv.innerText = "Error: Current password is incorrect.";
+            }
+        } catch (err) {
+            msgDiv.style.color = '#dc2626';
+            msgDiv.innerText = `Frontend Config Error: ${err.message}`;
+        }
+    });
 </script>
 
 </body>
