@@ -425,77 +425,56 @@
 
     // C. SUBMIT EVENT HANDLER FOR CHANGE PASSWORD
     if (changePasswordForm) {
-      changePasswordForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        
-        const oldPassword = document.getElementById('oldPassword').value;
-        const newPassword = document.getElementById('newPassword').value;
-        const confirmPassword = document.getElementById('confirmPassword').value;
-        
-        if (newPassword !== confirmPassword) {
+  changePasswordForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    const oldPassword = document.getElementById('oldPassword').value;
+    const newPassword = document.getElementById('newPassword').value;
+    const confirmPassword = document.getElementById('confirmPassword').value;
+    
+    if (newPassword !== confirmPassword) {
+        msgDiv.style.color = '#dc2626';
+        msgDiv.innerText = "Error: New passwords do not match.";
+        return;
+    }
+
+    msgDiv.style.color = '#4b5563';
+    msgDiv.innerText = "Processing change...";
+
+    try {
+        // 1. Drop your live credentials here (Ensure no trailing spaces)
+        const supabaseUrl = 'https://supabase.co'; 
+        const supabaseKey = 'your-actual-long-anon-key-string';
+
+        // 2. Initialize using standard direct invocation (Cleaned up the slow message block)
+        const client = window.supabase.createClient(supabaseUrl, supabaseKey);
+
+        // 3. Execute the secure check on your users table
+        const { data: isSuccess, error } = await client
+            .rpc('change_user_password', {
+                input_username: activeUsername, 
+                old_password: oldPassword,
+                new_password: newPassword
+            });
+
+        if (error) {
             msgDiv.style.color = '#dc2626';
-            msgDiv.innerText = "Error: New passwords do not match.";
-            return;
-        }
-
-        msgDiv.style.color = '#4b5563';
-        msgDiv.innerText = "Processing change...";
-
-        try {
-            // Replace with your true project credentials
-            const supabaseUrl = 'https://odxoizuukbawoqlvdslx.supabase.co';
-            const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9keG9penV1a2Jhd29xbHZkc2x4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg0MzYzMjQsImV4cCI6MjEwNDAxMjMyNH0.seSaovzESK_knCDGhqOHyjyRiZXyPUjZmxFfr1butaA';
-            
-            //if (supabaseUrl.includes('YOUR_SUPABASE')) {
-                //throw new Error("Supabase credentials are not configured yet.");
-            //}
-
-            // FIXED: Safety fallback check to ensure the external library is fully loaded into global memory
-            if (!window.supabase) {
-                throw new Error("The Supabase network connection is slow. Please refresh the page and try again.");
-            }
-
-            // FIXED: Using window.supabase explicitly references the global CDN package instantiation
-            const client = window.supabase.createClient(supabaseUrl, supabaseKey);
-
-            // Execute the secure check on your users table
-            const { data: isSuccess, error } = await client
-                .rpc('change_user_password', {
-                    input_username: activeUsername, // Uses your logged-in localStorage user!
-                    old_password: oldPassword,
-                    new_password: newPassword
-                });
-
-            if (error) {
-                msgDiv.style.color = '#dc2626';
-                msgDiv.innerText = `System Error: ${error.message}`;
-            } else if (isSuccess) {
-                msgDiv.style.color = '#16a34a';
-                msgDiv.innerText = "Success! Password updated successfully.";
-                setTimeout(closeModal, 1500); 
-            } else {
-                msgDiv.style.color = '#dc2626';
-                msgDiv.innerText = "Error: Current password is incorrect.";
-            }
-        } catch (err) {
+            msgDiv.innerText = `System Error: ${error.message}`;
+        } else if (isSuccess) {
+            msgDiv.style.color = '#16a34a';
+            msgDiv.innerText = "Success! Password updated successfully.";
+            setTimeout(closeModal, 1500); 
+        } else {
             msgDiv.style.color = '#dc2626';
-            msgDiv.innerText = `Configuration Error: ${err.message}`;
+            msgDiv.innerText = "Error: Current password is incorrect.";
         }
-      });
+    } catch (err) {
+        msgDiv.style.color = '#dc2626';
+        msgDiv.innerText = `System Error: ${err.message}`;
+        console.error(err);
     }
   });
-
-  // D. SECURE LOGOUT SYSTEM (Kept available globally for your button click)
-  function handleLogout() {
-    alert("Logging you out securely... clearing local web variables.");
-    
-    // Wipe all session markers cleanly
-    localStorage.removeItem("session_active");
-    localStorage.removeItem("session_user");
-    
-    // Redirect instantly to index/login root
-    window.location.replace("/");
-  }
+}
 </script>
 
 </body>
