@@ -295,25 +295,7 @@
   }
 </script>
 
-  <script>
-  // Runs automatically when the dashboard finishes loading
-  document.addEventListener("DOMContentLoaded", () => {
-    const activeUser = localStorage.getItem("session_user");
-    if (activeUser) {
-      document.getElementById("displayName").innerText = activeUser;
-    }
-  });
-
-  // Your existing logout script function handler
-  function handleLogout() {
-    alert("Logging you out securely... clearing local web variables.");
-    
-    // Wipe all session markers cleanly
-    localStorage.removeItem("session_active");
-    localStorage.removeItem("session_user");
-    
-    window.location.replace("/");
-  }
+ 
 
 <!-- The Clickable Dashboard Link -->
 
@@ -383,36 +365,66 @@
     </div>
 </div>
 
+<!-- ==========================================
+     LOAD THIRD-PARTY LIBRARIES FIRST
+     ========================================== -->
+<script src="https://jsdelivr.net"></script>
+
+<!-- ==========================================
+     UNIFIED DASHBOARD CONTROLLER SCRIPT
+     ========================================== -->
 <script>
-    // 1. GET YOUR ELEMENTS FIRST (This runs instantly)
+  // Global variable to hold active user name across functions
+  let activeUsername = "Guest";
+
+  // Runs automatically when the dashboard finishes loading in memory
+  document.addEventListener("DOMContentLoaded", () => {
+    
+    // 1. SESSION & DISPLAY NAME LOGIC
+    const activeUser = localStorage.getItem("session_user");
+    if (activeUser) {
+      activeUsername = activeUser; // Dynamically sets your active user session name!
+      const nameDisplayEl = document.getElementById("displayName");
+      if (nameDisplayEl) {
+        nameDisplayEl.innerText = activeUser;
+      }
+    }
+
+    // 2. PASSWORD MODAL CONTROLLER BINDINGS
     const changePasswordLink = document.getElementById('changePasswordLink');
     const passwordBoxContainer = document.getElementById('passwordBoxContainer');
     const closeBoxBtn = document.getElementById('closeBoxBtn');
     const changePasswordForm = document.getElementById('changePasswordForm');
     const msgDiv = document.getElementById('passwordMessage');
 
-    // 2. TOGGLE VISIBILITY LISTENERS (This will now open the box no matter what)
-    changePasswordLink.addEventListener('click', (event) => {
+    // Toggle Modal Opening State safely
+    if (changePasswordLink && passwordBoxContainer) {
+      changePasswordLink.addEventListener('click', (event) => {
         event.preventDefault();
-        passwordBoxContainer.style.display = 'flex'; // Opens the centered box
-    });
-
-    function closeModal() {
-        passwordBoxContainer.style.display = 'none';
-        changePasswordForm.reset();
-        msgDiv.innerText = "";
+        passwordBoxContainer.style.display = 'flex'; // Reveals centered overlay card
+      });
     }
 
-    closeBoxBtn.addEventListener('click', closeModal);
+    // Close Modal helper function
+    function closeModal() {
+      if (passwordBoxContainer) passwordBoxContainer.style.display = 'none';
+      if (changePasswordForm) changePasswordForm.reset();
+      if (msgDiv) msgDiv.innerText = "";
+    }
 
-    passwordBoxContainer.addEventListener('click', (event) => {
+    if (closeBoxBtn) closeBoxBtn.addEventListener('click', closeModal);
+
+    if (passwordBoxContainer) {
+      passwordBoxContainer.addEventListener('click', (event) => {
         if (event.target === passwordBoxContainer) {
             closeModal();
         }
-    });
+      });
+    }
 
-    // 3. INITIALIZE SUPABASE INSIDE THE SUBMIT EVENT (Prevents page crashes)
-    changePasswordForm.addEventListener('submit', async (e) => {
+    // 3. SUBMIT EVENT HANDLER FOR CHANGE PASSWORD
+    if (changePasswordForm) {
+      changePasswordForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         
         const oldPassword = document.getElementById('oldPassword').value;
@@ -429,20 +441,20 @@
         msgDiv.innerText = "Processing change...";
 
         try {
-            // Put your actual keys here. If they are placeholders, the code will jump to the catch block safely!
-            const supabaseUrl = 'https://odxoizuukbawoqlvdslx.supabase.co';
-            const supabaseKey = 'sb_publishable_DAYJQI8KSVY2kawIPsQrrw_2-zo1PDt';
+            // Replace with your true project credentials
+            const supabaseUrl = 'YOUR_SUPABASE_PROJECT_URL';
+            const supabaseKey = 'YOUR_SUPABASE_ANON_KEY';
             
             if (supabaseUrl.includes('YOUR_SUPABASE')) {
-                throw new Error("Supabase URLs have not been configured yet.");
+                throw new Error("Supabase credentials are not configured yet.");
             }
 
             const client = supabase.createClient(supabaseUrl, supabaseKey);
-            const activeUsername = "Venkatesh"; 
 
+            // Execute the secure check on your users table
             const { data: isSuccess, error } = await client
                 .rpc('change_user_password', {
-                    input_username: activeUsername,
+                    input_username: activeUsername, // Uses your logged-in localStorage user!
                     old_password: oldPassword,
                     new_password: newPassword
                 });
@@ -460,10 +472,24 @@
             }
         } catch (err) {
             msgDiv.style.color = '#dc2626';
-            msgDiv.innerText = `Frontend Config Error: ${err.message}`;
+            msgDiv.innerText = `Configuration Error: ${err.message}`;
         }
-    });
-</script>
+      });
+    }
+  });
+
+  // 4. SECURE LOGOUT SYSTEM (Kept available globally for your button click)
+  function handleLogout() {
+    alert("Logging you out securely... clearing local web variables.");
+    
+    // Wipe all session markers cleanly
+    localStorage.removeItem("session_active");
+    localStorage.removeItem("session_user");
+    
+    // Redirect instantly to index/login root
+    window.location.replace("/");
+  }
+</script> <!-- FIXED: Properly closed tag solves your blank script response freeze! -->
 
 </body>
 </html>
