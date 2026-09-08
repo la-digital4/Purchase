@@ -353,7 +353,31 @@
     <div id="passwordMessage" style="margin-top: 12px; font-size: 14px; font-weight: 500;"></div>
 </div>
 
+<script>
+// Grab references to your HTML elements
+const changePasswordLink = document.getElementById('changePasswordLink');
+const passwordBoxContainer = document.getElementById('passwordBoxContainer');
+const closeBoxBtn = document.getElementById('closeBoxBtn');
 
+// Action A: Listen for clicks on the "Change Password" link
+changePasswordLink.addEventListener('click', (event) => {
+    event.preventDefault(); // Stops the webpage from scrolling to the top or changing pages
+    
+    // Toggle state: If it's hidden, show it. If it's open, hide it.
+    if (passwordBoxContainer.style.display === 'none') {
+        passwordBoxContainer.style.display = 'block';
+    } else {
+        passwordBoxContainer.style.display = 'none';
+    }
+});
+
+// Action B: Listen for clicks on the optional "✕" close button inside the box
+closeBoxBtn.addEventListener('click', () => {
+    passwordBoxContainer.style.display = 'none';
+    document.getElementById('changePasswordForm').reset(); // Resets input text fields automatically
+    document.getElementById('passwordMessage').innerText = ""; // Clears status text hints
+});
+</script>
   
 </body>
 </html>
