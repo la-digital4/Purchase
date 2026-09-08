@@ -364,14 +364,13 @@
         <div id="passwordMessage" style="margin-top: 12px; font-size: 14px; font-weight: 500;"></div>
     </div>
 </div>
-
 <!-- ==========================================
-     LOAD THIRD-PARTY LIBRARIES FIRST
+     1. LOAD THIRD-PARTY LIBRARIES FIRST
      ========================================== -->
 <script src="https://jsdelivr.net"></script>
 
 <!-- ==========================================
-     UNIFIED DASHBOARD CONTROLLER SCRIPT
+     2. UNIFIED DASHBOARD CONTROLLER SCRIPT
      ========================================== -->
 <script>
   // Global variable to hold active user name across functions
@@ -380,7 +379,7 @@
   // Runs automatically when the dashboard finishes loading in memory
   document.addEventListener("DOMContentLoaded", () => {
     
-    // 1. SESSION & DISPLAY NAME LOGIC
+    // A. SESSION & DISPLAY NAME LOGIC
     const activeUser = localStorage.getItem("session_user");
     if (activeUser) {
       activeUsername = activeUser; // Dynamically sets your active user session name!
@@ -390,7 +389,7 @@
       }
     }
 
-    // 2. PASSWORD MODAL CONTROLLER BINDINGS
+    // B. PASSWORD MODAL CONTROLLER BINDINGS
     const changePasswordLink = document.getElementById('changePasswordLink');
     const passwordBoxContainer = document.getElementById('passwordBoxContainer');
     const closeBoxBtn = document.getElementById('closeBoxBtn');
@@ -422,7 +421,7 @@
       });
     }
 
-    // 3. SUBMIT EVENT HANDLER FOR CHANGE PASSWORD
+    // C. SUBMIT EVENT HANDLER FOR CHANGE PASSWORD
     if (changePasswordForm) {
       changePasswordForm.addEventListener('submit', async (e) => {
         e.preventDefault();
@@ -442,14 +441,20 @@
 
         try {
             // Replace with your true project credentials
-            const supabaseUrl = 'https://odxoizuukbawoqlvdslx.supabase.co';
-            const supabaseKey = 'sb_publishable_DAYJQI8KSVY2kawIPsQrrw_2-zo1PDt';
+            const supabaseUrl = 'YOUR_SUPABASE_PROJECT_URL';
+            const supabaseKey = 'YOUR_SUPABASE_ANON_KEY';
             
             if (supabaseUrl.includes('YOUR_SUPABASE')) {
                 throw new Error("Supabase credentials are not configured yet.");
             }
 
-            const client = supabase.createClient(supabaseUrl, supabaseKey);
+            // FIXED: Safety fallback check to ensure the external library is fully loaded into global memory
+            if (!window.supabase) {
+                throw new Error("The Supabase network connection is slow. Please refresh the page and try again.");
+            }
+
+            // FIXED: Using window.supabase explicitly references the global CDN package instantiation
+            const client = window.supabase.createClient(supabaseUrl, supabaseKey);
 
             // Execute the secure check on your users table
             const { data: isSuccess, error } = await client
@@ -478,7 +483,7 @@
     }
   });
 
-  // 4. SECURE LOGOUT SYSTEM (Kept available globally for your button click)
+  // D. SECURE LOGOUT SYSTEM (Kept available globally for your button click)
   function handleLogout() {
     alert("Logging you out securely... clearing local web variables.");
     
@@ -489,7 +494,7 @@
     // Redirect instantly to index/login root
     window.location.replace("/");
   }
-</script> <!-- FIXED: Properly closed tag solves your blank script response freeze! -->
+</script>
 
 </body>
 </html>
